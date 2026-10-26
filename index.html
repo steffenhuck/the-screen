@@ -374,6 +374,7 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
       </div>
       <div class="legs"><i></i><i></i></div>
     </div>
+    <div class="verdict" id="eShow" style="font-size:20px;text-align:center;margin:8px 0 4px"></div>
     <div class="verdict" id="eVerdict"></div>
     <div class="stats" id="eStats"></div>
     <div class="chart"><h4>Approval, year by year</h4><canvas id="c2"></canvas><div class="ckey"><span style="--c:var(--ink)">real approval</span><span style="--c:#B9AE9F">your polls</span></div></div>
@@ -904,10 +905,11 @@ async function scoreTV(score,grade){
   await tune('THE SCREEN',REDUCED?0:1100,{card:'card2',snow:'snow2'});
   await new Promise(r=>setTimeout(r,REDUCED?0:900));
   const ns='http://www.w3.org/2000/svg',g=document.createElementNS(ns,'g');g.setAttribute('class','sweep');g.setAttribute('clip-path','url(#cc2)');
-  g.innerHTML=`<circle cx="160" cy="120" r="101" fill="${grade[1]}"/>`;card.appendChild(g);
+  g.innerHTML=`<circle cx="160" cy="120" r="101" fill="${grade[2]}"/>`;card.appendChild(g);
+  const lines=grade[1].split('|');
   const t=document.createElementNS(ns,'g');t.setAttribute('class','scoretxt');
-  t.innerHTML=`<text x="160" y="128" text-anchor="middle" font-family="Avenir Next,Avenir,Futura,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="64" fill="${grade[2]}">${score}</text>
-    <text x="160" y="160" text-anchor="middle" font-family="Avenir Next,Avenir,Futura,Helvetica Neue,Arial,sans-serif" font-weight="800" font-size="15" letter-spacing="2.5" fill="${grade[2]}">${grade[0].toUpperCase()}</text>`;
+  t.innerHTML=`<text x="160" y="${lines.length>1?118:128}" text-anchor="middle" font-family="Avenir Next,Avenir,Futura,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="64" fill="${grade[3]}">${score}</text>`+
+    lines.map((l,i)=>`<text x="160" y="${(lines.length>1?146:160)+i*18}" text-anchor="middle" font-family="Avenir Next,Avenir,Futura,Helvetica Neue,Arial,sans-serif" font-weight="800" font-size="14" letter-spacing="2" fill="${grade[3]}">${l}</text>`).join('');
   card.appendChild(t);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{g.classList.add('on');setTimeout(()=>t.classList.add('on'),REDUCED?0:700);}));
 }
@@ -917,8 +919,12 @@ function endGame(){
   $('eTitle').textContent=G.ousted!==null?`Out after ${y} year${y>1?'s':''}`:'Twenty years on air';
   const zero=R_GAME*(0.5+P.beta)*SCALE*YEARS; // what a director who never shows a pink screen earns
   const score=Math.max(-100,Math.round(100*(G.score-zero)/(CUR.best-zero)));
-  const grade=score<0?['Test card','#7A6E63','#fff']:score<40?['Late-night slot','#F1E4CC','#2B2420']:score<70?['Prime time','#F4C0D1','#72243E']:score<90?['Hit show','#D4537E','#fff']:['A classic','#FFD23F','#2B2420'];
+  const LADDER=[[0,'no better than a test card','TEST CARD','#7A6E63','#fff'],[20,'a tad better than a test card','A TAD BETTER|THAN A TEST CARD','#C9BBA4','#2B2420'],
+    [40,'late-night filler','LATE-NIGHT|FILLER','#F1E4CC','#2B2420'],[55,'daytime television','DAYTIME|TELEVISION','#F4C0D1','#72243E'],[70,'prime time','PRIME TIME','#ED93B1','#4B1528'],
+    [85,'a hit','A HIT','#D4537E','#fff'],[95,'the talk of the nation','THE TALK OF|THE NATION','#E8B931','#2B2420'],[101,'a classic','A CLASSIC','#FFD23F','#2B2420']];
+  const grade=LADDER.find(g=>score<g[0]).slice(1); // [sentence, card label, fill, text colour]
   scoreTV(score,grade);
+  $('eShow').innerHTML=`Your show was <b>${grade[0]}</b>.`;
   $('eVerdict').innerHTML=`You earned <b>${fmt(G.score)}k</b>, ${fmt(G.bon)}k of it in bonuses. ${G.ousted!==null?`In year ${y} your real approval fell below one half, and the board let you go.`:`You kept your majority to the end.`} A director who never shows a pink screen scores 0; the best possible run in ${CUR.name} scores 100.`;
   $('eStats').innerHTML=[['earned',fmt(G.score)+'k'],['of which bonus',fmt(G.bon)+'k'],['lowest real approval',(100*Math.min(...H.V)).toFixed(2)+'%'],['years on air',String(y)]]
     .map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join('');
