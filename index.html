@@ -413,20 +413,20 @@ const CC=(()=>{
 
 /* ===== Countries ===== */
 const COUNTRIES=[
- {id:'placidia',name:'Placidia',diff:1,best:2896,tease:'A steady country. Your tastes stay put, and nobody learns your code.',chips:['steady taste','no learning'],P:{},
+ {id:'placidia',name:'Placidia',diff:1,best:1888,tease:'A steady country. Your tastes stay put, and nobody learns your code.',chips:['steady taste','no learning'],P:{},
   how:"In Placidia nobody learns your code. Friends stick to their own kind, and the schools don't teach it."},
- {id:'semidocta',name:'Semidocta',diff:2,best:3223,tease:'The schools teach your code. A little.',chips:['a little schooling'],P:{eta:0.0001,s:0.001},
+ {id:'semidocta',name:'Semidocta',diff:2,best:2214,tease:'The schools teach your code. A little.',chips:['a little schooling'],P:{eta:0.0001,s:0.001},
   how:"In Semidocta the schools teach your code, a little. Friends stick to their own kind. And the more of your code you show, the more you love it, a little."},
- {id:'narcissia',name:'Narcissia',diff:3,best:4039,tease:'The more of your code you show, the more you love it.',chips:['taste grows','no learning'],P:{eta:0.0004},
+ {id:'narcissia',name:'Narcissia',diff:3,best:3030,tease:'The more of your code you show, the more you love it.',chips:['taste grows','no learning'],P:{eta:0.0004},
   how:"In Narcissia nobody learns your code. Friends stick to their own kind, and the schools don't teach it. And the more of your code you show, the more you love it."},
- {id:'amoria',name:'Amoria',diff:3,best:4444,tease:'You fall for your code, and friends pass it on.',chips:['taste grows','friends teach'],P:{eta:0.0004,kappa:0.03},
+ {id:'amoria',name:'Amoria',diff:3,best:3435,tease:'You fall for your code, and friends pass it on.',chips:['taste grows','friends teach'],P:{eta:0.0004,kappa:0.03},
   how:"In Amoria friends who read your code pass it on, but East and West rarely mix, and the schools don't teach it. And the more of your code you show, the more you love it."},
- {id:'hermetica',name:'Hermetica',diff:4,best:3009,tease:'To outsiders your code means nothing at all.',chips:['blank to outsiders','friends teach'],P:{eta:0.0001,kappa:0.03,phi:1.0},
+ {id:'hermetica',name:'Hermetica',diff:4,best:2002,tease:'To outsiders your code means nothing at all.',chips:['blank to outsiders','friends teach'],P:{eta:0.0001,kappa:0.03,phi:1.0},
   how:"In Hermetica your code means nothing to anyone who can't read it: they miss every show in it. Some learn it from friends; the schools don't teach it."},
- {id:'bipartia',name:'Bipartia',diff:5,best:2977,tease:'East and West are the same size.',chips:['big East','friends teach'],P:{eta:0.0001,kappa:0.03,muE:0.5,muW:0.5},
+ {id:'bipartia',name:'Bipartia',diff:5,best:1969,tease:'East and West are the same size.',chips:['big East','friends teach'],P:{eta:0.0001,kappa:0.03,muE:0.5,muW:0.5},
   how:"In Bipartia East and West are the same size, and your own people live mostly in the West. Some learn your code from friends; the schools don't teach it."},
 ];
-const R_GAME=0.02, SCALE=10000, YEARS=20, SPY=1, NSCR=20;
+const R_GAME=0.01, SCALE=10000, YEARS=20, SPY=1, NSCR=20;
 // The game runs the model of Closed Codes on a faster clock: every rate doubled, every long-run level kept.
 const FAST=P=>Object.assign({},P,{theta:P.theta*2,eps:P.eps*2,zeta:P.zeta*2,eta:P.eta*4,kappa:P.kappa*2,s:P.s*2,delta0:P.delta0*2,rho:P.rho*2});
 const POLL_SD={N:0.01,W:0.012,E:0.018};
