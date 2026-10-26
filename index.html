@@ -128,11 +128,11 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .actions button{flex:1}
 
 .polls{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:10px 12px;margin-top:10px}
-.prow{display:grid;grid-template-columns:62px 1fr 64px;gap:8px;align-items:center;font-size:13px;margin:5px 0}
+.prow{display:grid;grid-template-columns:56px 1fr 78px;gap:8px;align-items:center;font-size:13px;margin:5px 0}
 .bar{position:relative;height:16px;background:#E9E0D0;border-radius:3px;overflow:hidden}
 .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--good);transition:width .8s,background .8s}
 .bar .half{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:var(--ink)}
-.bar .moe{position:absolute;top:2px;bottom:2px;border-left:2px solid rgba(43,36,32,.75);border-right:2px solid rgba(43,36,32,.75);background:repeating-linear-gradient(90deg,rgba(43,36,32,.18) 0 2px,transparent 2px 4px);transition:left .8s,width .8s}
+.bar .moe{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,var(--bad) 0 3px,rgba(255,255,255,.4) 3px 6px);transition:left .8s,width .8s}
 .pv small{font-size:10px;font-weight:600;color:var(--muted);margin-left:2px}
 .pv.risky{color:var(--bad)}
 .moenote{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.35}
@@ -199,7 +199,7 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .paperstrip.quiet .hl{color:var(--muted);font-weight:400;font-style:italic}
 .payhead{font-size:24px;font-weight:700;margin-bottom:8px}
 .payhead small{display:block;font-size:13px;color:var(--muted);font-weight:400}
-.bigpolls .prow{grid-template-columns:62px 1fr 72px;font-size:15px;margin:12px 0}
+.bigpolls .prow{grid-template-columns:60px 1fr 92px;font-size:15px;margin:12px 0}
 .bigpolls .bar{height:24px}
 .bigpolls .spark{height:90px}
 
@@ -618,7 +618,7 @@ function countUp(dSal,dBon,ms){
 function pollsHTML(p,big){
   return `<div class="${big?'bigpolls':''}"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Approval</div>
   ${[['W','West'],['E','East'],['N','<b>Nation</b>']].map(([k,l])=>`<div class="prow"><span>${l}</span><div class="bar"><i id="${p}b${k}"></i><b class="moe" id="${p}m${k}"></b><span class="half"></span></div><span class="pv" id="${p}v${k}"></span></div>`).join('')}
-  <div class="moenote">Polls carry a margin of error of about ±${(100*MOE('N')).toFixed(0)} points nationally, more in the regions. The board counts the real thing.</div>
+  <div class="moenote">Each poll shows its likely range; red hatching marks the part of it below one half. The board counts the real thing.</div>
   <canvas class="spark" id="${p}spark"></canvas></div>`;
 }
 function fillPolls(p,L,prev,arrows){
@@ -627,8 +627,10 @@ function fillPolls(p,L,prev,arrows){
     $(p+'b'+k).style.width=(100*w)+'%';$(p+'b'+k).style.background=x<0.5?'var(--bad)':(x<0.52?'#C98A2B':'var(--good)');
     let d='';if(arrows&&prev){const dd=x-prev[k];if(Math.abs(dd)>0.0005)d=`<span class="d" style="color:${dd>0?'var(--good)':'var(--bad)'}">${dd>0?'▲':'▼'}</span>`;}
     const m=MOE(k),lo=Math.max(0,Math.min(1,(x-m-0.3)/0.4)),hi=Math.max(0,Math.min(1,(x+m-0.3)/0.4));
-    const me=$(p+'m'+k);me.style.left=(100*lo)+'%';me.style.width=(100*(hi-lo))+'%';
-    const risky=x-m<0.5;$(p+'v'+k).innerHTML=`${pct(x)}<small>±${(100*m).toFixed(0)}</small>${d}`;$(p+'v'+k).classList.toggle('risky',risky);
+    // red hatching over the part of the range that lies below one half
+    const me=$(p+'m'+k),half=0.5,redTo=Math.min(x+m,half),redFrom=x-m;
+    if(redTo>redFrom){me.style.left=(100*lo)+'%';me.style.width=(100*(Math.max(0,Math.min(1,(redTo-0.3)/0.4))-lo))+'%';me.style.display='';}else me.style.display='none';
+    const risky=x-m<half;$(p+'v'+k).innerHTML=`${Math.round(100*(x-m))}–${Math.round(100*(x+m))}%${d}`;$(p+'v'+k).classList.toggle('risky',risky);
   }
   drawSpark(p+'spark',G.hist.V.length);
 }
