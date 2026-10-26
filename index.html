@@ -132,6 +132,10 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .bar{position:relative;height:16px;background:#E9E0D0;border-radius:3px;overflow:hidden}
 .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--good);transition:width .8s,background .8s}
 .bar .half{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:var(--ink)}
+.bar .moe{position:absolute;top:2px;bottom:2px;border-left:2px solid rgba(43,36,32,.75);border-right:2px solid rgba(43,36,32,.75);background:repeating-linear-gradient(90deg,rgba(43,36,32,.18) 0 2px,transparent 2px 4px);transition:left .8s,width .8s}
+.pv small{font-size:10px;font-weight:600;color:var(--muted);margin-left:2px}
+.pv.risky{color:var(--bad)}
+.moenote{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.35}
 .pv{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
 .pv .d{font-size:10px;font-weight:700;margin-left:2px}
 .spark{display:block;width:100%;height:46px;margin-top:6px}
@@ -285,7 +289,7 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
     <p>Your <b>salary</b> follows your approval. Your <b>bonus</b> comes from every pink screen. If approval drops below one half, you are out. You have twenty years.</p>
     <h3 style="margin-top:14px">How it works</h3>
     <p>Every household watches two of your shows a year, picked at random from your screens. Anyone can miss a show now and then, and a show in your code is lost on most people who can't read it. When people miss a show, they ask around. If someone got it, fine. If nobody did, they conclude it wasn't meant for them. If that happens with both their shows in a year, they hold a grudge. Grudges fade over time. Over time some people learn your code: from friends who already read it, or at school.</p>
-    <p>Your polls are surveys, so they can be off by a point or two. The board counts the real thing.</p>
+    <p>Your polls are surveys and come with a margin of error, shown as a bracket. The board counts the real thing: if real approval is below one half, you are out, whatever the polls said.</p>
     <p id="bHow" style="font-weight:700"></p>
     <div class="actions"><button onclick="show('start')">Back</button><button class="primary" onclick="startGame()">Take the job</button></div>
   </div>
@@ -430,6 +434,7 @@ const R_GAME=0.01, SCALE=10000, YEARS=20, SPY=1, NSCR=20;
 // The game runs the model of Closed Codes on a faster clock: every rate doubled, every long-run level kept.
 const FAST=P=>Object.assign({},P,{theta:P.theta*2,eps:P.eps*2,zeta:P.zeta*2,eta:P.eta*4,kappa:P.kappa*2,s:P.s*2,delta0:P.delta0*2,rho:P.rho*2});
 const POLL_SD={N:0.01,W:0.012,E:0.018};
+const MOE=k=>2*POLL_SD[k]; // margin of error shown to the player: two standard errors
 const PAPER_URL='https://steffenhuck.github.io/drafts/closed_codes.pdf';
 
 /* ===== Pictures ===== */
@@ -600,7 +605,8 @@ function countUp(dSal,dBon,ms){
 /* ----- polls ----- */
 function pollsHTML(p,big){
   return `<div class="${big?'bigpolls':''}"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Approval</div>
-  ${[['W','West'],['E','East'],['N','<b>Nation</b>']].map(([k,l])=>`<div class="prow"><span>${l}</span><div class="bar"><i id="${p}b${k}"></i><span class="half"></span></div><span class="pv" id="${p}v${k}"></span></div>`).join('')}
+  ${[['W','West'],['E','East'],['N','<b>Nation</b>']].map(([k,l])=>`<div class="prow"><span>${l}</span><div class="bar"><i id="${p}b${k}"></i><b class="moe" id="${p}m${k}"></b><span class="half"></span></div><span class="pv" id="${p}v${k}"></span></div>`).join('')}
+  <div class="moenote">Polls carry a margin of error of about ±${(100*MOE('N')).toFixed(0)} points nationally, more in the regions. The board counts the real thing.</div>
   <canvas class="spark" id="${p}spark"></canvas></div>`;
 }
 function fillPolls(p,L,prev,arrows){
@@ -608,7 +614,9 @@ function fillPolls(p,L,prev,arrows){
     const x=L[k];const w=Math.max(0,Math.min(1,(x-0.3)/0.4));
     $(p+'b'+k).style.width=(100*w)+'%';$(p+'b'+k).style.background=x<0.5?'var(--bad)':(x<0.52?'#C98A2B':'var(--good)');
     let d='';if(arrows&&prev){const dd=x-prev[k];if(Math.abs(dd)>0.0005)d=`<span class="d" style="color:${dd>0?'var(--good)':'var(--bad)'}">${dd>0?'▲':'▼'}</span>`;}
-    $(p+'v'+k).innerHTML=pct(x)+d;
+    const m=MOE(k),lo=Math.max(0,Math.min(1,(x-m-0.3)/0.4)),hi=Math.max(0,Math.min(1,(x+m-0.3)/0.4));
+    const me=$(p+'m'+k);me.style.left=(100*lo)+'%';me.style.width=(100*(hi-lo))+'%';
+    const risky=x-m<0.5;$(p+'v'+k).innerHTML=`${pct(x)}<small>±${(100*m).toFixed(0)}</small>${d}`;$(p+'v'+k).classList.toggle('risky',risky);
   }
   drawSpark(p+'spark',G.hist.V.length);
 }
@@ -618,7 +626,10 @@ function drawSpark(id,upto){
   const lo=0.42,hi=0.58,T=YEARS*SPY,Y=v=>H-(v-lo)/(hi-lo)*H;
   x.strokeStyle='#2B2420';x.setLineDash([3,3]);x.lineWidth=1;x.beginPath();x.moveTo(0,Y(.5));x.lineTo(W,Y(.5));x.stroke();x.setLineDash([]);
   x.fillStyle='#7A6E63';x.font='10px sans-serif';x.fillText('50%',2,Y(.5)-3);
-  const V=G.hist.poll.slice(0,upto);if(!V.length)return;x.strokeStyle='#2B2420';x.lineWidth=1.8;x.beginPath();
+  const V=G.hist.poll.slice(0,upto);if(!V.length)return;const m=MOE('N'),X=i=>i/(T-1)*W,cl=v=>Y(Math.max(lo,Math.min(hi,v)));
+  if(V.length>1){x.fillStyle='rgba(43,36,32,.12)';x.beginPath();V.forEach((v,i)=>{i?x.lineTo(X(i),cl(v+m)):x.moveTo(X(i),cl(v+m));});for(let i=V.length-1;i>=0;i--)x.lineTo(X(i),cl(V[i]-m));x.closePath();x.fill();}
+  else{x.fillStyle='rgba(43,36,32,.12)';x.fillRect(0,cl(V[0]+m),6,cl(V[0]-m)-cl(V[0]+m));}
+  x.strokeStyle='#2B2420';x.lineWidth=1.8;x.beginPath();
   V.forEach((v,i)=>{const px=i/(T-1)*W,py=Y(Math.max(lo,Math.min(hi,v)));i?x.lineTo(px,py):x.moveTo(px,py);});x.stroke();
   const lv=V[V.length-1],lx=(V.length-1)/(T-1)*W;x.fillStyle='#2B2420';x.beginPath();x.arc(Math.max(3,lx),Y(Math.max(lo,Math.min(hi,lv))),3,0,7);x.fill();
 }
