@@ -84,15 +84,16 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 #studioStreets .aironly{display:none}
 .wall.wide{grid-template-columns:repeat(10,minmax(0,1fr));gap:3px}
 .wallbox.small{padding:5px;margin-top:10px}
-.house .shows{display:flex;justify-content:center;gap:3px;height:16px;margin-bottom:3px}
+.house .shows{display:flex;justify-content:center;gap:9px;height:18px;margin:4px 0 3px;padding-right:6px}
 .house .shows.on .tile{animation:pop .35s backwards}
 .house .shows.on .tile:nth-child(2){animation-delay:.15s}
-.tile{width:20px;height:15px;border-radius:2px;border:1.5px solid #2B2420;display:flex;align-items:center;justify-content:center}
+.tile{width:22px;height:16px;border-radius:2px;border:1.5px solid #2B2420;position:relative}
 .tile.a{background:#F4C0D1}.tile.c{background:#8A5A36}
-.tile em{font-style:normal;font-size:11px;font-weight:900;line-height:1}
-.tile.got em{color:var(--good)}.tile.c.got em{color:#B6E3B0}
-.tile.told em{color:var(--good);opacity:.45}.tile.c.told em{color:#B6E3B0}
-.tile.nobody{border-color:var(--bad);box-shadow:0 0 0 1.5px var(--bad)}.tile.nobody em{color:var(--bad)}.tile.c.nobody em{color:#FFB3AB}
+.tile em{position:absolute;right:-6px;top:-6px;width:14px;height:14px;border-radius:50%;font-style:normal;font-size:10px;font-weight:900;line-height:14px;text-align:center;color:#fff;border:1.5px solid #fff;box-sizing:content-box}
+.tile.got em{background:#1F9D3A}
+.tile.told em{background:#fff;color:#1F9D3A;border-color:#1F9D3A}
+.tile.nobody em{background:#D7261E}
+.tile.nobody{border-color:#D7261E}
 .scr{background:#111;border-radius:4px;padding:2px;transition:transform .2s}
 .scr svg{display:block;width:100%;border-radius:2px}
 .scr.flick{animation:flick .28s}
@@ -319,7 +320,7 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
       <div class="street"><div class="lab"><b>A street in the West</b><span>70% of viewers</span></div><div class="houses" id="hW"></div></div>
       <div class="street"><div class="lab"><b>A street in the East</b><span>30% of viewers</span></div><div class="houses" id="hE"></div></div>
     </div>
-    <div class="legend">Pink windows are your people. A teak house with a pink chair has learned your code.<span class="aironly"> Above each house, the two shows it watched this year: ✓ got it, faint ✓ someone explained it, ✗ nobody around got it.</span> Red bars on a door are grudges not yet forgotten.</div></div></div>
+    <div class="legend">Pink windows are your people. A teak house with a pink chair has learned your code.<span class="aironly"> Above each house, the two shows it watched this year: ✓ got it, white ✓ someone explained it, ✗ nobody around got it.</span> Red bars on a door are grudges not yet forgotten.</div></div></div>
   </div>
 
   <!-- 3 polls -->
@@ -760,7 +761,7 @@ function baseSVG(kind){
   return `<svg class="base" viewBox="0 0 40 44"><path d="M2 12 L20 2 L38 12 Z" fill="#2B2420"/><rect x="2" y="12" width="36" height="30" fill="#E9E0D0" stroke="#2B2420" stroke-width="1.5"/><rect x="4" y="14" width="32" height="22" fill="${wall}"/>${inside}<rect x="4" y="36" width="32" height="4" fill="#C9BBA4"/></svg>`;
 }
 function faceSVG(kind,mood){
-  const skin=mood==='smile'?'#FFD23F':'#E53935';
+  const skin=mood==='smile'?'#FFD23F':'#E0661B';
   const mouth=mood==='smile'?'<path d="M4 8.5 Q7 11.5 10 8.5" fill="none" stroke="#2B2420" stroke-width="1.2"/>':'<path d="M4 10.5 Q7 7.8 10 10.5" fill="none" stroke="#2B2420" stroke-width="1.2"/>';
   return `<svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="${skin}" stroke="#2B2420" stroke-width="1"/><circle cx="5" cy="5.5" r=".9" fill="#2B2420"/><circle cx="9" cy="5.5" r=".9" fill="#2B2420"/>${mouth}</svg>`;
 }
