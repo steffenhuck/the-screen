@@ -198,6 +198,30 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .bigpolls .bar{height:24px}
 .bigpolls .spark{height:90px}
 
+.tvgame{max-width:520px;margin:4px auto 0}
+.tvgame .tvbody{padding:4% 3% 4% 4%}
+.tvscreen.tvwall{aspect-ratio:auto;padding:4%;background:#1b1714}
+.tvscreen.tvwall .wall{gap:4px;position:relative;z-index:1}
+.tvscreen.tvwall .scan{z-index:2}
+.knob{transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
+.tvwrap{position:relative}
+.tvwrap .bubbles{position:absolute;inset:0;pointer-events:none;z-index:5}
+.crawl{display:flex;align-items:stretch;background:#111;color:#F5EFE3;border-radius:4px;overflow:hidden;margin:10px 0;height:34px;font-weight:700;letter-spacing:.02em}
+.crawl>b{background:var(--red);color:#fff;padding:0 10px;display:flex;align-items:center;font-size:13px;letter-spacing:.12em;flex:none}
+.crawlwin{flex:1;overflow:hidden;position:relative;display:flex;align-items:center}
+.crawlwin span{white-space:nowrap;position:absolute;left:0;font-size:15px;will-change:transform;animation:crawl var(--cd,20s) linear infinite}
+.crawl.big{height:44px}.crawl.big .crawlwin span{font-size:18px}
+@keyframes crawl{from{transform:translateX(var(--cw,400px))}to{transform:translateX(-100%)}}
+@media (prefers-reduced-motion: reduce){.crawl{height:auto;min-height:34px}.crawlwin span{position:static;animation:none;white-space:normal;padding:6px 8px}}
+.house .glow.snow{opacity:1;background-size:cover;image-rendering:pixelated;box-shadow:none}
+.house .glow.snow.a{background-color:#F4C0D1;background-image:none!important;box-shadow:0 0 12px 4px rgba(212,83,126,.7)}
+.house .glow.snow.c{background-color:#8A5A36;background-image:none!important;box-shadow:0 0 12px 4px rgba(232,185,49,.6)}
+.burst.big svg{width:170px;height:155px}
+.burst.big span{font-size:24px}.burst.big span small{font-size:13px}
+.chip-b{position:absolute;transform:translate(-50%,-50%);background:#F4C0D1;color:#72243E;border:2px solid #72243E;border-radius:10px;padding:0 5px;font-weight:800;font-size:12px;white-space:nowrap;animation:rise var(--rd,2.6s) ease-out forwards;opacity:0}
+@keyframes rise{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.1)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-260%) scale(.9)}}
+.paynote{text-align:center;font-size:14px;color:var(--muted);margin:8px 0 2px;min-height:20px}
+.paynote b{color:var(--pinkdk)}
 /* end */
 .endbox{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:16px;margin-top:8px}
 .endbox h2{font-size:30px;line-height:1.1}
@@ -268,16 +292,22 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 
   <!-- 1 decide -->
   <div class="view" id="vDecide">
-    <div class="paperstrip" id="stripD"><div class="mh">The Evening Standard-Bearer</div><div class="hl" id="hlD"></div></div>
-    <div class="polls" id="pollsD"></div>
-    <div id="studioStreets"></div>
-    <div class="wallbox small"><div class="wall wide" id="wall"></div></div>
+    <div class="tv tvgame" >
+      <div class="tvbody">
+        <div class="tvscreen tvwall"><div class="wall" id="wall"></div><div class="scan"></div></div>
+        <div class="tvside"><div class="knob kA"></div><div class="knob small kC"></div><div class="grille"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="legs"><i></i><i></i></div>
+    </div>
+    <div class="crawl" id="crawlD"><b>NEWS</b><div class="crawlwin"><span></span></div></div>
     <div class="panel">
       <div class="codebox a"><svg viewBox="0 0 60 44" id="pA"></svg>your code<span class="n" id="nA">8</span></div>
       <div class="steppers"><button id="plus" aria-label="More of your code">+</button><button id="minus" aria-label="Less of your code">−</button></div>
       <div class="codebox c"><svg viewBox="0 0 60 44" id="pC"></svg>common code<span class="n" id="nC">12</span></div>
     </div>
     <div class="till"><div><small>salary so far</small><b id="tSal">0k</b></div><div><small>bonus so far</small><b id="tBon" style="color:var(--pink)">0k</b></div><div class="tot"><small>total</small><b id="tTot">0k</b></div></div>
+    <div class="polls" id="pollsD"></div>
+    <div id="studioStreets"></div>
   </div>
 
   <!-- 2 on air -->
@@ -294,14 +324,21 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 
   <!-- 3 polls -->
   <div class="view hidden" id="vPolls">
-    <div class="paperstrip big" id="stripP"><div class="mh">The Evening Standard-Bearer</div><div class="hl" id="hlP"></div></div>
     <div class="polls" id="pollsP"></div>
+    <div class="crawl big" id="crawlP"><b>NEWS</b><div class="crawlwin"><span></span></div></div>
   </div>
 
   <!-- 4 payday -->
   <div class="view hidden" id="vPay">
     <div class="payhead" id="payhead">Payday</div>
-    <div class="wallbox"><div class="wall" id="wall2"></div><div class="bubbles" id="bubbles"></div></div>
+    <div class="tvwrap"><div class="tv tvgame" >
+      <div class="tvbody">
+        <div class="tvscreen tvwall"><div class="wall" id="wall2"></div><div class="scan"></div></div>
+        <div class="tvside"><div class="knob kA"></div><div class="knob small kC"></div><div class="grille"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="legs"><i></i><i></i></div>
+    </div><div class="bubbles" id="bubbles"></div></div>
+    <div class="paynote" id="paynote"></div>
     <div class="till"><div><small>salary so far</small><b id="tSal2">0k</b></div><div><small>bonus so far</small><b id="tBon2" style="color:var(--pink)">0k</b></div><div class="tot"><small>total</small><b id="tTot2">0k</b></div></div>
   </div>
 
@@ -487,7 +524,7 @@ function startGame(){
      hist:{pi:[],V:[],VW:[],VE:[],lW:[],lE:[],SW:[],SE:[],psi:[]},fired:new Set(),
      shownV:{W:.55,E:.55,N:.55},lastV:{W:.55,E:.55,N:.55},
      streets:{W:makeStreet(rand,Math.round(12*P.alW)),E:makeStreet(rand,Math.max(Math.round(12*P.alE),P.alE>0?1:0))},
-     dipped:false,dSal:0,dBon:0,year:null,headline:'New Director-General takes over the national broadcaster'};
+     dipped:false,dSal:0,dBon:0,year:null,headline:'New Director-General takes over the national broadcaster',ticker:['NEW DIRECTOR-GENERAL TAKES OVER THE NATIONAL BROADCASTER','SUPPORT FOR THE BROADCASTER AT 55% IN EAST AND WEST']};
   $('gCty').textContent=CUR.name;
   buildWall('wall');buildWall('wall2');buildStreets();$('nA').textContent=G.k;$('nC').textContent=NSCR-G.k;paintWall('wall',false);renderTill();
   goStage(0);show('game');
@@ -521,8 +558,8 @@ function wait(ms){return new Promise(res=>{const t0=performance.now();const f=()
 
 /* ----- studio ----- */
 function enterDecide(){
-  placeStreets('studioStreets');clearTiles();
-  $('hlD').textContent=G.headline;
+  placeStreets('studioStreets');clearTiles();clearFaces();
+  setCrawl('crawlD',G.ticker);
   $('pollsD').innerHTML=pollsHTML('d',false);fillPolls('d',G.lastV,null,false);
   paintWall('wall',false);renderTill();setNext('Broadcast the year',true);
 }
@@ -534,7 +571,9 @@ function paintWall(id,anim){
     if(el.dataset.code!==want){el.querySelector('svg').innerHTML=isA?A_PIC:C_PIC;el.dataset.code=want;
       if(anim){el.classList.remove('flip');void el.offsetWidth;el.classList.add('flip');}}});
 }
-function renderCount(){$('nA').textContent=G.k;$('nC').textContent=NSCR-G.k;paintWall('wall',true);}
+function renderCount(){$('nA').textContent=G.k;$('nC').textContent=NSCR-G.k;paintWall('wall',true);turnKnobs();}
+function turnKnobs(){document.querySelectorAll('.kA').forEach(k=>k.style.transform=`rotate(${-135+G.k*13.5}deg)`);document.querySelectorAll('.kC').forEach(k=>k.style.transform=`rotate(${-135+(NSCR-G.k)*13.5}deg)`);}
+function clearFaces(){document.querySelectorAll('.house .face').forEach(f=>f.classList.remove('on'));}
 $('plus').onclick=()=>{if(STAGE!==0||G.k>=NSCR)return;G.k++;renderCount();};
 $('minus').onclick=()=>{if(STAGE!==0||G.k<=0)return;G.k--;renderCount();};
 function updateTop(){const y=Math.min(YEARS,Math.floor((STAGE===0?G.t:G.t-1)/SPY)+1);$('gYear').textContent=`Year ${Math.max(1,y)} of ${YEARS}`;}
@@ -572,6 +611,30 @@ function drawSpark(id,upto){
   x.fillStyle='#7A6E63';x.font='10px sans-serif';x.fillText('50%',2,Y(.5)-3);
   const V=G.hist.V.slice(0,upto);if(!V.length)return;x.strokeStyle='#2B2420';x.lineWidth=1.8;x.beginPath();
   V.forEach((v,i)=>{const px=i/(T-1)*W,py=Y(Math.max(lo,Math.min(hi,v)));i?x.lineTo(px,py):x.moveTo(px,py);});x.stroke();
+  const lv=V[V.length-1],lx=(V.length-1)/(T-1)*W;x.fillStyle='#2B2420';x.beginPath();x.arc(Math.max(3,lx),Y(Math.max(lo,Math.min(hi,lv))),3,0,7);x.fill();
+}
+
+/* ----- news crawl ----- */
+function tickerItems(Y){
+  const out=[],P=Y.prevV,L=G.lastV,pt=x=>(100*x).toFixed(1)+'%';
+  if(Y.news)out.push(Y.news.toUpperCase());
+  for(const [k,name,th] of [['N','NATIONWIDE',0.003],['E','EAST',0.006],['W','WEST',0.006]]){
+    const d=L[k]-P[k];
+    if(P[k]>=0.5&&L[k]<0.5)out.push(`${name}: SUPPORT DROPS BELOW HALF, NOW ${pt(L[k])}`);
+    else if(P[k]<0.5&&L[k]>=0.5)out.push(`${name}: SUPPORT BACK ABOVE HALF, NOW ${pt(L[k])}`);
+    else if(d<=-th)out.push(`${name}: SUPPORT FALLS ${(100*-d).toFixed(1)} POINTS TO ${pt(L[k])}`);
+    else if(d>=th)out.push(`${name}: SUPPORT UP ${(100*d).toFixed(1)} POINTS TO ${pt(L[k])}`);
+  }
+  if(!out.length)out.push('NO MAJOR SHIFTS IN SUPPORT THIS YEAR');
+  out.push(`ON YOUR SCREENS NEXT YEAR: STAY TUNED`);
+  return out;
+}
+function setCrawl(id,items){
+  const sp=$(id).querySelector('.crawlwin span'),win=$(id).querySelector('.crawlwin');
+  sp.textContent='+++ '+items.join(' +++ ')+' +++';
+  const w=win.clientWidth||360;sp.style.setProperty('--cw',w+'px');
+  sp.style.animation='none';void sp.offsetWidth;sp.style.animation='';
+  requestAnimationFrame(()=>{const len=sp.scrollWidth+w;sp.style.setProperty('--cd',(len/70).toFixed(1)+'s');});
 }
 
 /* ----- headlines ----- */
@@ -601,7 +664,7 @@ function checkHeadlines(){ // returns text or null; each fires once
 /* ----- the year: compute first, then show it in stages ----- */
 function broadcast(){
   const pi=G.k/NSCR,P=G.P,lam=P.lam,phi=P.phi;
-  const Y={pi,seasons:[],sal:0,bon:0,prevV:Object.assign({},G.lastV)};
+  const Y={pi,k:G.k,seasons:[],sal:0,bon:0,prevV:Object.assign({},G.lastV)};
   for(let s=0;s<SPY && !over();s++){
     const before=G.st.slice(),o=CC.step(G.st,P,pi);
     const ell={W:before[0],E:before[1]},nu=o.nu;
@@ -629,6 +692,7 @@ function broadcast(){
   }
   Y.news=checkHeadlines();
   if(Y.news)G.headline=Y.news;
+  G.ticker=tickerItems(Y);
   G.year=Y;
   stageAir();
 }
@@ -640,33 +704,53 @@ async function stagePolls(){
   // show last year's numbers first, then move to this year's
   const nBefore=G.hist.V.length-Y.seasons.length;
   fillPolls('p',Y.prevV,null,false);drawSpark('pspark',nBefore);
-  const strip=$('stripP');
-  if(Y.news){strip.classList.remove('quiet');$('hlP').textContent='…';}
-  else{strip.classList.add('quiet');$('hlP').textContent='No news from the broadcaster this year.';}
+  setCrawl('crawlP',['…']);
   await wait(700);
   fillPolls('p',G.lastV,Y.prevV,true);
   // sweep the approval line forward season by season
   for(let k=nBefore+1;k<=G.hist.V.length;k++){drawSpark('pspark',k);await wait(600);}
   drawSpark('pspark',G.hist.V.length);
-  if(Y.news){await wait(500);$('hlP').textContent=Y.news;strip.classList.remove('flash');void strip.offsetWidth;strip.classList.add('flash');}
-  await wait(600);
+  await wait(400);setCrawl('crawlP',G.ticker);
+  await wait(1200);
   playing=false;rush=false;setNext('Payday',true);
 }
 
 async function stagePay(){
   goStage(3);playing=true;rush=false;setNext('',false);
-  const Y=G.year;
-  paintWall('wall2',false);$('bubbles').innerHTML='';
+  const Y=G.year,box=$('bubbles');
+  paintWall('wall2',false);turnKnobs();box.innerHTML='';$('paynote').innerHTML='';
   $('payhead').innerHTML=G.ousted!==null?'Final payday<small>Your last year in the job.</small>':`Payday<small>${G.k} of ${NSCR} screens showed your code this year.</small>`;
   await wait(500);
-  bursts(Y.sal,Y.bon,3600);
-  await wait(3600*0.72);
-  await countUp(Y.sal,Y.bon,700);
-  if(rush){$('bubbles').innerHTML='';G.dSal=G.sal;G.dBon=G.bon;renderTill();}
+  // salary: one big burst
+  box.style.setProperty('--bd','4200ms');
+  const spike=(fill,stroke)=>{let pts='';const N=14;for(let i=0;i<2*N;i++){const r=i%2?38:50,a=Math.PI*i/N;pts+=(55+r*Math.cos(a)).toFixed(1)+','+(55+r*Math.sin(a)*.8).toFixed(1)+' ';}
+    return `<svg width="110" height="100" viewBox="0 0 110 110"><polygon points="${pts}" fill="${fill}" stroke="${stroke}" stroke-width="3"/></svg>`;};
+  const d=document.createElement('div');d.className='burst big';d.style.left='50%';d.style.top='42%';
+  d.innerHTML=spike('#FFF3C4','#2B2420')+`<span style="color:#2B2420">+${fmt(Y.sal)}k<small>salary</small></span>`;box.appendChild(d);
+  await wait(3300);
+  // bonus: one small bubble from every pink screen
+  const per=Y.k>0?Y.bon/Y.k:0;
+  if(Y.k>0){
+    const wrap=box.getBoundingClientRect(),ps=pinkSet(Y.k);
+    $('wall2').querySelectorAll('.scr').forEach((el,i)=>{ if(!ps.has(i))return;
+      const r=el.getBoundingClientRect(),b=document.createElement('div');b.className='chip-b';
+      b.style.left=((r.left+r.width/2-wrap.left)/wrap.width*100)+'%';b.style.top=((r.top+r.height/2-wrap.top)/wrap.height*100)+'%';
+      b.style.animationDelay=(Math.random()*900|0)+'ms';b.textContent='+'+fmtK(per);box.appendChild(b);});
+    $('paynote').innerHTML=`Bonus: <b>${Y.k} × ${fmtK(per)}</b> = <b>${fmt(Y.bon)}k</b>`;
+  } else $('paynote').textContent='No pink screens, no bonus.';
+  await wait(2800);
+  await countUp(Y.sal,Y.bon,800);
+  if(rush){box.innerHTML='';G.dSal=G.sal;G.dBon=G.bon;renderTill();}
   playing=false;rush=false;
   setNext(over()?(G.ousted!==null?'See what happened':'Forty years: see your record'):'Back to the studio',true);
 }
+function fmtK(x){return (x<10?x.toFixed(1):Math.round(x).toString())+'k';}
 
+let _SN=null;
+function snowFrames(){ if(_SN)return _SN; _SN=[];
+  const c=document.createElement('canvas');c.width=32;c.height=20;const x=c.getContext('2d');
+  for(let f=0;f<6;f++){const im=x.createImageData(32,20);for(let i=0;i<im.data.length;i+=4){const v=Math.random()*255|0;im.data[i]=im.data[i+1]=im.data[i+2]=v;im.data[i+3]=255;}x.putImageData(im,0,0);_SN.push(c.toDataURL());}
+  return _SN;}
 /* ----- streets: persistent houses, animated step by step ----- */
 function baseSVG(kind){
   const wall=kind==='A'?'#F4C0D1':'#8A5A36';
@@ -676,7 +760,7 @@ function baseSVG(kind){
   return `<svg class="base" viewBox="0 0 40 44"><path d="M2 12 L20 2 L38 12 Z" fill="#2B2420"/><rect x="2" y="12" width="36" height="30" fill="#E9E0D0" stroke="#2B2420" stroke-width="1.5"/><rect x="4" y="14" width="32" height="22" fill="${wall}"/>${inside}<rect x="4" y="36" width="32" height="4" fill="#C9BBA4"/></svg>`;
 }
 function faceSVG(kind,mood){
-  const skin=kind==='A'?'#fff':'#F1E4CC';
+  const skin=mood==='smile'?'#FFD23F':'#E53935';
   const mouth=mood==='smile'?'<path d="M4 8.5 Q7 11.5 10 8.5" fill="none" stroke="#2B2420" stroke-width="1.2"/>':'<path d="M4 10.5 Q7 7.8 10 10.5" fill="none" stroke="#2B2420" stroke-width="1.2"/>';
   return `<svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="${skin}" stroke="#2B2420" stroke-width="1"/><circle cx="5" cy="5.5" r=".9" fill="#2B2420"/><circle cx="9" cy="5.5" r=".9" fill="#2B2420"/>${mouth}</svg>`;
 }
@@ -718,15 +802,18 @@ async function stageAir(){
   const all=[];for(let i=0;i<12;i++)for(const r of ['W','E'])all.push([r,i]);
   all.forEach(([r,i])=>{setFace(r,i,null);setGlow(r,i,null);});
   $('season').innerHTML=`<b>Year ${G.t}</b><span>On air</span>`;
-  // beat 1: the screens flicker in every window
+  // beat 1: static in every window, breaking into the show
+  const SN=snowFrames();
   caption('<b>They watch your show.</b> Some get it, some don’t.');
   const t0=performance.now();
   while(!rush&&performance.now()-t0<5000){
-    for(const [r,i] of all) if(G.rand()<0.35) setGlow(r,i,G.rand()<Y.pi?'a':'c');
+    for(const [r,i] of all){const g=HE(r,i).querySelector('.glow');
+      if(G.rand()<0.18){g.className='glow snow '+(G.rand()<Y.pi?'a':'c');}
+      else{g.className='glow snow';g.style.backgroundImage=`url(${SN[(G.rand()*SN.length)|0]})`;}}
     const mm=$('mini');if(G.rand()<0.3){mm.classList.remove('flash');void mm.offsetWidth;mm.classList.add('flash');}
-    await wait(260);
+    await wait(140);
   }
-  all.forEach(([r,i])=>setGlow(r,i,null));
+  all.forEach(([r,i])=>{setGlow(r,i,null);HE(r,i).querySelector('.glow').style.backgroundImage='';});
   // beat 2: each house's two shows, faces, grudges, learning
   $('season').innerHTML=`<b>Year ${G.t}</b><span>The year is over</span>`;
   caption('<b>The year is over.</b> Some are happy with your show. Others complain.');
