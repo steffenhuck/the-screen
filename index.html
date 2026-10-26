@@ -105,7 +105,7 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .burst svg{display:block}
 .burst span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:15px;line-height:1.05}
 .burst span small{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-@keyframes burst{0%{transform:translate(-50%,-50%) scale(0) rotate(-12deg)}8%{transform:translate(-50%,-50%) scale(1.18) rotate(3deg)}13%{transform:translate(-50%,-50%) scale(1) rotate(0)}72%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,40%) scale(.35)}}
+@keyframes burst{0%{transform:translate(-50%,-50%) scale(0) rotate(-12deg)}8%{transform:translate(-50%,-50%) scale(1.18) rotate(3deg)}13%{transform:translate(-50%,-50%) scale(1) rotate(0)}72%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.3)}}
 .till{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:0;margin-top:8px;background:var(--ink);color:var(--paper);border-radius:8px;overflow:hidden}
 .till div{padding:6px 10px;text-align:center}
 .till div+div{border-left:1px solid #4a403a}
@@ -223,9 +223,9 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .house .glow.snow.c{background-color:#8A5A36;background-image:none!important;box-shadow:0 0 12px 4px rgba(232,185,49,.6)}
 .burst.big svg{width:170px;height:155px}
 .burst.big span{font-size:24px}.burst.big span small{font-size:13px}
-.chip-b{position:absolute;transform:translate(-50%,-50%);width:68px;height:58px;animation:rise var(--rd,2.6s) ease-out forwards;opacity:0}
+.chip-b{position:absolute;transform:translate(-50%,-50%);width:80px;height:68px;animation:rise var(--rd,2.6s) ease-out forwards;opacity:0}
 .chip-b svg{position:absolute;inset:0;width:100%;height:100%}
-.chip-b span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#72243E;font-weight:900;font-size:12px}
+.chip-b span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#72243E;font-weight:900;font-size:15px}
 @keyframes rise{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.1)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-260%) scale(.9)}}
 .paynote{text-align:center;font-size:14px;color:var(--muted);margin:8px 0 2px;min-height:20px}
 .paynote b{color:var(--pinkdk)}
@@ -323,7 +323,7 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
       <div class="steppers"><button id="plus" aria-label="More of your code">+</button><button id="minus" aria-label="Less of your code">−</button></div>
       <div class="codebox c"><svg viewBox="0 0 60 44" id="pC"></svg>common code<span class="n" id="nC">12</span></div>
     </div>
-    <div class="till"><div><small>salary so far</small><b id="tSal">0k</b></div><div><small>bonus so far</small><b id="tBon" style="color:var(--pink)">0k</b></div><div class="tot"><small>total</small><b id="tTot">0k</b></div></div>
+    <div class="till"><div><small>salary</small><b id="tSal">0k</b></div><div><small>bonus</small><b id="tBon" style="color:var(--pink)">0k</b></div><div class="tot"><small>total</small><b id="tTot">0k</b></div></div>
     <div class="polls" id="pollsD"></div>
     <div id="studioStreets"></div>
   </div>
@@ -357,7 +357,7 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
       <div class="legs"><i></i><i></i></div>
     </div><div class="bubbles" id="bubbles"></div></div>
     <div class="paynote" id="paynote"></div>
-    <div class="till"><div><small>salary so far</small><b id="tSal2">0k</b></div><div><small>bonus so far</small><b id="tBon2" style="color:var(--pink)">0k</b></div><div class="tot"><small>total</small><b id="tTot2">0k</b></div></div>
+    <div class="till"><div><small>salary</small><b id="tSal2">0k</b></div><div><small>bonus</small><b id="tBon2" style="color:var(--pink)">0k</b></div><div class="tot"><small>total</small><b id="tTot2">0k</b></div></div>
   </div>
 
   <div class="nextbar"><button class="primary" id="next">Broadcast the year</button></div>
@@ -908,8 +908,8 @@ async function scoreTV(score,grade){
   g.innerHTML=`<circle cx="160" cy="120" r="101" fill="${grade[2]}"/>`;card.appendChild(g);
   const lines=grade[1].split('|');
   const t=document.createElementNS(ns,'g');t.setAttribute('class','scoretxt');
-  t.innerHTML=`<text x="160" y="${lines.length>1?118:128}" text-anchor="middle" font-family="Avenir Next,Avenir,Futura,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="64" fill="${grade[3]}">${score}</text>`+
-    lines.map((l,i)=>`<text x="160" y="${(lines.length>1?146:160)+i*18}" text-anchor="middle" font-family="Avenir Next,Avenir,Futura,Helvetica Neue,Arial,sans-serif" font-weight="800" font-size="14" letter-spacing="2" fill="${grade[3]}">${l}</text>`).join('');
+  t.innerHTML=`<text x="160" y="${lines.length>1?120:132}" text-anchor="middle" font-family="Avenir Next,Avenir,Futura,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="72" fill="${grade[3]}">${score}</text>`+
+    lines.map((l,i)=>`<text x="160" y="${(lines.length>1?148:164)+i*22}" text-anchor="middle" font-family="Avenir Next,Avenir,Futura,Helvetica Neue,Arial,sans-serif" font-weight="800" font-size="19" letter-spacing="1.5" fill="${grade[3]}">${l}</text>`).join('');
   card.appendChild(t);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{g.classList.add('on');setTimeout(()=>t.classList.add('on'),REDUCED?0:700);}));
 }
