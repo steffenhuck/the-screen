@@ -227,8 +227,8 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .paynote b{color:var(--pinkdk)}
 .scoreburst{position:relative;width:240px;height:200px;margin:4px auto 0;animation:pop .6s}
 .scoreburst svg{position:absolute;inset:0;width:100%;height:100%}
-.scoreburst span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2B2420;font-weight:900;font-size:50px;line-height:1}
-.scoreburst span small{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;max-width:130px;text-align:center;line-height:1.25}
+.scoreburst span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:56px;line-height:1}
+.scoreburst span small{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-top:6px;max-width:150px;text-align:center;line-height:1.25}
 /* end */
 .endbox{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:16px;margin-top:8px}
 .endbox h2{font-size:30px;line-height:1.1}
@@ -417,9 +417,9 @@ const COUNTRIES=[
   how:"In Placidia nobody learns your code. Friends stick to their own kind, and the schools don't teach it."},
  {id:'semidocta',name:'Semidocta',diff:2,best:2214,tease:'The schools teach your code. A little.',chips:['a little schooling'],P:{eta:0.0001,s:0.001},
   how:"In Semidocta the schools teach your code, a little. Friends stick to their own kind. And the more of your code you show, the more you love it, a little."},
- {id:'narcissia',name:'Narcissia',diff:3,best:3030,tease:'The more of your code you show, the more you love it.',chips:['taste grows','no learning'],P:{eta:0.0004},
+ {id:'narcissia',name:'Narcissia',diff:3,best:4173,tease:'The more of your code you show, the more you love it.',chips:['taste grows','no learning'],P:{eta:0.0008},
   how:"In Narcissia nobody learns your code. Friends stick to their own kind, and the schools don't teach it. And the more of your code you show, the more you love it."},
- {id:'amoria',name:'Amoria',diff:3,best:3435,tease:'You fall for your code, and friends pass it on.',chips:['taste grows','friends teach'],P:{eta:0.0004,kappa:0.03},
+ {id:'amoria',name:'Amoria',diff:3,best:4878,tease:'You fall for your code, and friends pass it on.',chips:['taste grows','friends teach'],P:{eta:0.0008,kappa:0.03},
   how:"In Amoria friends who read your code pass it on, but East and West rarely mix, and the schools don't teach it. And the more of your code you show, the more you love it."},
  {id:'hermetica',name:'Hermetica',diff:4,best:2002,tease:'To outsiders your code means nothing at all.',chips:['blank to outsiders','friends teach'],P:{eta:0.0001,kappa:0.03,phi:1.0},
   how:"In Hermetica your code means nothing to anyone who can't read it: they miss every show in it. Some learn it from friends; the schools don't teach it."},
@@ -529,7 +529,7 @@ function startGame(){
   const P=FAST(Object.assign({},CC.P0,CUR.P));
   $('shareW').textContent=Math.round(100*P.muW)+'% of viewers';$('shareE').textContent=Math.round(100*P.muE)+'% of viewers';
   const rand=rng(Date.now());
-  G={P,st:CC.init(P),t:0,k:8,score:0,sal:0,bon:0,ousted:null,rand,
+  G={P,st:CC.init(P),t:0,k:10,score:0,sal:0,bon:0,ousted:null,rand,
      hist:{pi:[],V:[],poll:[],VW:[],VE:[],lW:[],lE:[],SW:[],SE:[],psi:[]},trueV:{W:.55,E:.55,N:.55},fired:new Set(),
      shownV:{W:.55,E:.55,N:.55},lastV:{W:.55,E:.55,N:.55},
      streets:{W:makeStreet(rand,Math.round(12*P.alW)),E:makeStreet(rand,Math.max(Math.round(12*P.alE),P.alE>0?1:0))},
@@ -880,12 +880,13 @@ function endGame(){
   show('end');
   const H=G.hist,P=G.P,y=G.ousted!==null?G.ousted+1:YEARS;
   $('eTitle').textContent=G.ousted!==null?`Out after ${y} year${y>1?'s':''}`:'Twenty years on air';
-  const share=Math.round(100*G.score/CUR.best);
+  const zero=R_GAME*(0.5+P.beta)*SCALE*YEARS; // what a director who never shows a pink screen earns
+  const score=Math.max(-100,Math.round(100*(G.score-zero)/(CUR.best-zero)));
+  const grade=score<0?['Cancelled','#E0661B','#fff']:score<40?['Late-night slot','#F1E4CC','#2B2420']:score<70?['Prime time','#F4C0D1','#72243E']:score<90?['Hit show','#D4537E','#fff']:['A classic','#FFD23F','#2B2420'];
   let pts='';const N=16;for(let i=0;i<2*N;i++){const r=i%2?78:100,a=Math.PI*i/N;pts+=(120+r*Math.cos(a)).toFixed(1)+','+(100+r*Math.sin(a)*.85).toFixed(1)+' ';}
-  const fill=share>=90?'#FFD23F':share>=70?'#F4C0D1':'#F1E4CC';
-  $('eBurst').innerHTML=`<svg viewBox="0 0 240 200"><polygon points="${pts}" fill="${fill}" stroke="#2B2420" stroke-width="4"/></svg><span>${share}%<small>of the best possible run in ${CUR.name}</small></span>`;
-  $('eVerdict').innerHTML=`You earned <b>${fmt(G.score)}k</b>, ${fmt(G.bon)}k of it in bonuses. ${G.ousted!==null?`In year ${y} your real approval fell below one half, and the board let you go.`:`You kept your majority to the end.`}`;
-  $('eStats').innerHTML=[['earned',fmt(G.score)+'k'],['of which bonus',fmt(G.bon)+'k'],['lowest real approval',pct(Math.min(...H.V))],['years on air',String(y)]]
+  $('eBurst').innerHTML=`<svg viewBox="0 0 240 200"><polygon points="${pts}" fill="${grade[1]}" stroke="#2B2420" stroke-width="4"/></svg><span style="color:${grade[2]}">${score}<small>${grade[0]}</small></span>`;
+  $('eVerdict').innerHTML=`You earned <b>${fmt(G.score)}k</b>, ${fmt(G.bon)}k of it in bonuses. ${G.ousted!==null?`In year ${y} your real approval fell below one half, and the board let you go.`:`You kept your majority to the end.`} A director who never shows a pink screen scores 0; the best possible run in ${CUR.name} scores 100.`;
+  $('eStats').innerHTML=[['earned',fmt(G.score)+'k'],['of which bonus',fmt(G.bon)+'k'],['lowest real approval',(100*Math.min(...H.V)).toFixed(2)+'%'],['years on air',String(y)]]
     .map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join('');
   const P100=v=>(v*100).toFixed(0)+'%',lo=Math.min(0.44,...H.V,...H.poll)-0.005,hi=Math.max(0.58,...H.poll)+0.005;
   lineChart('c2',[{d:H.poll,c:'#B9AE9F',dash:true},{d:H.V,c:'#2B2420'}],lo,hi,0.5,YEARS,P100);
@@ -895,7 +896,7 @@ function endGame(){
   else bits.push('nobody ever learned your code');
   const tg=(P.delta0+G.st[4])/P.delta0;
   if(P.eta>0)bits.push(`your taste for it had grown ${tg.toFixed(1)}-fold`);
-  $('eReveal').innerHTML=`Behind the polls: ${bits.join(', and ')}. The game runs the model of <a href="${PAPER_URL}" target="_blank" rel="noopener">Closed Codes</a> on a faster clock.`;
+  $('eReveal').innerHTML=`Behind the polls: ${bits.join(', and ')}. The game is built on the paper <a href="${PAPER_URL}" target="_blank" rel="noopener">Closed Codes</a>; its numbers are tuned for a twenty-year game.`;
 }
 function lineChart(id,series,lo,hi,hline,T,lab){
   const c=$(id),dpr=window.devicePixelRatio||1,W=c.clientWidth,Hh=c.clientHeight;c.width=W*dpr;c.height=Hh*dpr;
