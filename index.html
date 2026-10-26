@@ -219,7 +219,9 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .house .glow.snow.c{background-color:#8A5A36;background-image:none!important;box-shadow:0 0 12px 4px rgba(232,185,49,.6)}
 .burst.big svg{width:170px;height:155px}
 .burst.big span{font-size:24px}.burst.big span small{font-size:13px}
-.chip-b{position:absolute;transform:translate(-50%,-50%);background:#F4C0D1;color:#72243E;border:2px solid #72243E;border-radius:10px;padding:0 5px;font-weight:800;font-size:12px;white-space:nowrap;animation:rise var(--rd,2.6s) ease-out forwards;opacity:0}
+.chip-b{position:absolute;transform:translate(-50%,-50%);width:68px;height:58px;animation:rise var(--rd,2.6s) ease-out forwards;opacity:0}
+.chip-b svg{position:absolute;inset:0;width:100%;height:100%}
+.chip-b span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#72243E;font-weight:900;font-size:12px}
 @keyframes rise{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.1)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-260%) scale(.9)}}
 .paynote{text-align:center;font-size:14px;color:var(--muted);margin:8px 0 2px;min-height:20px}
 .paynote b{color:var(--pinkdk)}
@@ -736,7 +738,7 @@ async function stagePay(){
     $('wall2').querySelectorAll('.scr').forEach((el,i)=>{ if(!ps.has(i))return;
       const r=el.getBoundingClientRect(),b=document.createElement('div');b.className='chip-b';
       b.style.left=((r.left+r.width/2-wrap.left)/wrap.width*100)+'%';b.style.top=((r.top+r.height/2-wrap.top)/wrap.height*100)+'%';
-      b.style.animationDelay=(Math.random()*900|0)+'ms';b.textContent='+'+fmtK(per);box.appendChild(b);});
+      b.style.animationDelay=(Math.random()*900|0)+'ms';b.innerHTML=miniBurst()+`<span>+${fmtK(per)}</span>`;box.appendChild(b);});
     $('paynote').innerHTML=`Bonus: <b>${Y.k} × ${fmtK(per)}</b> = <b>${fmt(Y.bon)}k</b>`;
   } else $('paynote').textContent='No pink screens, no bonus.';
   await wait(2800);
@@ -745,6 +747,8 @@ async function stagePay(){
   playing=false;rush=false;
   setNext(over()?(G.ousted!==null?'See what happened':'Forty years: see your record'):'Back to the studio',true);
 }
+function miniBurst(){let pts='';const N=10;for(let i=0;i<2*N;i++){const r=i%2?17:24,a=Math.PI*i/N;pts+=(29+r*Math.cos(a)).toFixed(1)+','+(25+r*Math.sin(a)*.85).toFixed(1)+' ';}
+  return `<svg viewBox="0 0 58 50"><polygon points="${pts}" fill="#F4C0D1" stroke="#72243E" stroke-width="2"/></svg>`;}
 function fmtK(x){return (x<10?x.toFixed(1):Math.round(x).toString())+'k';}
 
 let _SN=null;
@@ -807,7 +811,7 @@ async function stageAir(){
   const SN=snowFrames();
   caption('<b>They watch your show.</b> Some get it, some don’t.');
   const t0=performance.now();
-  while(!rush&&performance.now()-t0<5000){
+  while(!rush&&performance.now()-t0<3000){
     for(const [r,i] of all){const g=HE(r,i).querySelector('.glow');
       if(G.rand()<0.18){g.className='glow snow '+(G.rand()<Y.pi?'a':'c');}
       else{g.className='glow snow';g.style.backgroundImage=`url(${SN[(G.rand()*SN.length)|0]})`;}}
