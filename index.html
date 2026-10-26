@@ -27,10 +27,26 @@ footer{text-align:center;margin-top:36px}
 footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacing:.2em;font-size:13px}
 
 /* title */
-.mast{text-align:center;padding:18px 0 6px}
-.mast .logo{display:flex;justify-content:center;gap:6px;margin-bottom:10px}
-.mast h1{font-size:46px;letter-spacing:.04em}
-.mast p{color:var(--muted);margin:6px 0 0;font-size:15px}
+.mast{text-align:center;padding:14px 0 8px}
+.mast p{color:var(--muted);margin:14px 0 0;font-size:15px}
+.tv{max-width:440px;margin:0 auto}
+.tvbody{display:flex;gap:4%;background:#6B4226;border:3px solid #2B2420;border-radius:18px;padding:5% 4% 5% 5%;box-shadow:inset 0 0 0 4px #8A5A36}
+.tvscreen{position:relative;flex:1;aspect-ratio:4/3;border-radius:22px/18px;overflow:hidden;background:#111;border:4px solid #2B2420;box-shadow:inset 0 0 18px rgba(0,0,0,.6)}
+.tvscreen .card,.tvscreen .snow{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tvscreen .snow{image-rendering:pixelated;opacity:0;transition:opacity .15s}
+.tvscreen .snow.on{opacity:1}
+.tvscreen .scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.10) 0 1px,transparent 1px 3px);border-radius:inherit;box-shadow:inset 0 0 30px rgba(0,0,0,.45)}
+.tvscreen .card.roll{animation:roll .55s ease-out}
+@keyframes roll{0%{transform:translateY(-60%);filter:brightness(2) contrast(.6)}60%{transform:translateY(6%)}100%{transform:none;filter:none}}
+.tvside{width:17%;display:flex;flex-direction:column;align-items:center;gap:10%;padding-top:4%}
+.knob{width:72%;aspect-ratio:1;border-radius:50%;background:#2B2420;border:3px solid #4A2C18;position:relative}
+.knob::after{content:"";position:absolute;left:46%;top:8%;width:8%;height:40%;background:#C9BBA4;border-radius:2px}
+.knob.small{width:52%}
+.grille{width:80%;display:flex;flex-direction:column;gap:5px;margin-top:6%}
+.grille i{display:block;height:3px;background:#4A2C18;border-radius:2px}
+.legs{display:flex;justify-content:space-between;padding:0 14%}
+.legs i{display:block;width:10px;height:22px;background:#2B2420;border-radius:0 0 3px 3px;transform:skewX(-8deg)}
+.legs i+i{transform:skewX(8deg)}
 .intro{font-size:15px;line-height:1.55;margin:16px 0 18px;text-align:center}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .card{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:12px;text-align:left;cursor:pointer;position:relative;min-height:132px;display:flex;flex-direction:column;gap:6px;font-weight:400}
@@ -205,8 +221,20 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 <!-- START -->
 <section id="start">
   <div class="mast">
-    <div class="logo" id="logo"></div>
-    <h1>THE SCREEN</h1>
+    <div class="tv" id="tv" role="img" aria-label="An old television in a teak cabinet showing a test card titled The Screen">
+      <div class="tvbody">
+        <div class="tvscreen">
+          <svg class="card" id="card" viewBox="0 0 320 240"></svg>
+          <canvas class="snow" id="snow" width="160" height="120"></canvas>
+          <div class="scan"></div>
+        </div>
+        <div class="tvside">
+          <div class="knob"></div><div class="knob small"></div>
+          <div class="grille"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+      <div class="legs"><i></i><i></i></div>
+    </div>
     <p>You run the national broadcaster. Choose a country.</p>
   </div>
   <div class="grid" id="countries"></div>
@@ -372,13 +400,73 @@ function pct(v){return (100*v).toFixed(1)+'%';}
 function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
 
 /* ===== Start screen ===== */
-$('logo').innerHTML=[A_PIC,C_PIC].map(p=>`<div class="scr" style="width:58px"><svg viewBox="0 0 60 44">${p}</svg></div>`).join('');
+/* ===== The TV on the start screen ===== */
+function cardSVG(label){
+  const bars=['#F4C0D1','#E8B931','#F1E4CC','#D4537E','#8A5A36','#2B4C9A','#4A2C18'];
+  let g='';
+  for(let x=0;x<=320;x+=20)g+=`<line x1="${x}" y1="0" x2="${x}" y2="240" stroke="#F5EFE3" stroke-width="1.2"/>`;
+  for(let y=0;y<=240;y+=20)g+=`<line x1="0" y1="${y}" x2="320" y2="${y}" stroke="#F5EFE3" stroke-width="1.2"/>`;
+  const bw=200/bars.length;
+  const barsSVG=bars.map((c,i)=>`<rect x="${60+i*bw}" y="38" width="${bw+0.5}" height="52" fill="${c}"/>`).join('');
+  const grey=[0,1,2,3,4,5].map(i=>`<rect x="${60+i*200/6}" y="154" width="${200/6+0.5}" height="16" fill="hsl(25,10%,${10+i*16}%)"/>`).join('');
+  const fs=label.length>9?21:24;
+  return `<rect width="320" height="240" fill="#7A6E63"/>${g}
+  <rect x="6" y="6" width="22" height="22" fill="#2B2420"/><rect x="292" y="6" width="22" height="22" fill="#F5EFE3"/>
+  <rect x="6" y="212" width="22" height="22" fill="#F5EFE3"/><rect x="292" y="212" width="22" height="22" fill="#2B2420"/>
+  <defs><clipPath id="cc"><circle cx="160" cy="120" r="100"/></clipPath></defs>
+  <circle cx="160" cy="120" r="101" fill="#F5EFE3"/>
+  <g clip-path="url(#cc)">
+    <rect x="60" y="20" width="200" height="200" fill="#2B2420"/>
+    ${barsSVG}
+    <rect x="60" y="90" width="200" height="34" fill="#111"/>
+    <text x="160" y="${107+fs*0.36}" text-anchor="middle" font-family="Avenir Next,Avenir,Futura,Helvetica Neue,Arial,sans-serif" font-weight="800" font-size="${fs}" letter-spacing="2" fill="#F5EFE3">${label}</text>
+    <rect x="60" y="124" width="100" height="30" fill="#F4C0D1"/><rect x="160" y="124" width="100" height="30" fill="#6B4226"/>
+    <svg x="89" y="124" width="41" height="30" viewBox="0 0 60 44">${A_PIC}</svg>
+    <svg x="190" y="124" width="41" height="30" viewBox="0 0 60 44">${C_PIC}</svg>
+    ${grey}
+    <rect x="60" y="170" width="200" height="60" fill="#F5EFE3"/>
+    ${[0,1,2,3,4,5,6,7,8,9].map(i=>`<rect x="${100+i*12}" y="178" width="6" height="22" fill="#2B2420"/>`).join('')}
+  </g>
+  <circle cx="160" cy="120" r="100" fill="none" stroke="#2B2420" stroke-width="2"/>
+  <line x1="160" y1="20" x2="160" y2="38" stroke="#F5EFE3" stroke-width="1.5"/>`;
+}
+const REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function snow(ms){
+  return new Promise(res=>{
+    const c=$('snow'),x=c.getContext('2d'),img=x.createImageData(160,120),d=img.data;
+    if(REDUCED||ms<=0){res();return;}
+    c.classList.add('on');const t0=performance.now();
+    const f=now=>{
+      for(let i=0;i<d.length;i+=4){const v=Math.random()*255|0;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255;}
+      const band=(now/7)%120|0;for(let y=band;y<Math.min(120,band+6);y++)for(let xx=0;xx<160;xx++){const k=(y*160+xx)*4;d[k]=d[k+1]=d[k+2]=Math.min(255,d[k]+70);}
+      x.putImageData(img,0,0);
+      if(now-t0<ms)requestAnimationFrame(f);else{c.classList.remove('on');res();}
+    };requestAnimationFrame(f);
+  });
+}
+async function tune(label,ms){
+  const card=$('card');
+  await snow(ms);
+  card.innerHTML=cardSVG(label);
+  if(!REDUCED){card.classList.remove('roll');void card.offsetWidth;card.classList.add('roll');}
+}
+tune('THE SCREEN',1500);
 $('countries').innerHTML=COUNTRIES.map((c,i)=>`<div class="card ${c.on?'':'locked'}" ${c.on?`onclick="pick(${i})"`:''}>
   ${c.on?'':'<span class="soon">soon</span>'}<h3>${c.name}</h3><div class="dots">${'●'.repeat(c.diff)}${'○'.repeat(5-c.diff)}</div>
   <div class="tease">${c.tease}</div><div class="chips">${c.chips.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`).join('');
 $('bA').innerHTML=A_PIC;$('bC').innerHTML=C_PIC;$('pA').innerHTML=A_PIC;$('pC').innerHTML=C_PIC;
 let CUR=null;
-function pick(i){CUR=COUNTRIES[i];$('bTitle').textContent=CUR.name;$('bTease').textContent=CUR.tease;$('bHow').textContent=CUR.how||'';show('brief');}
+let picking=false;
+async function pick(i){
+  if(picking)return;picking=true;
+  CUR=COUNTRIES[i];$('bTitle').textContent=CUR.name;$('bTease').textContent=CUR.tease;$('bHow').textContent=CUR.how||'';
+  window.scrollTo({top:0,behavior:REDUCED?'auto':'smooth'});
+  await new Promise(r=>setTimeout(r,REDUCED?0:350));
+  await tune(CUR.name.toUpperCase(),450);
+  await new Promise(r=>setTimeout(r,REDUCED?300:1100));
+  show('brief');picking=false;
+  $('card').innerHTML=cardSVG('THE SCREEN');
+}
 
 /* ===== Game state ===== */
 let G=null, playing=false, rush=false;
