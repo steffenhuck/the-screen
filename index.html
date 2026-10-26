@@ -65,6 +65,18 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 
 .wallbox{position:relative;background:#2C2C2A;border-radius:10px;padding:8px}
 .wall{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+#studioStreets .aironly{display:none}
+.wall.wide{grid-template-columns:repeat(10,minmax(0,1fr));gap:3px}
+.wallbox.small{padding:5px;margin-top:10px}
+.house .shows{display:flex;justify-content:center;gap:3px;height:16px;margin-bottom:3px}
+.house .shows.on .tile{animation:pop .35s backwards}
+.house .shows.on .tile:nth-child(2){animation-delay:.15s}
+.tile{width:20px;height:15px;border-radius:2px;border:1.5px solid #2B2420;display:flex;align-items:center;justify-content:center}
+.tile.a{background:#F4C0D1}.tile.c{background:#8A5A36}
+.tile em{font-style:normal;font-size:11px;font-weight:900;line-height:1}
+.tile.got em{color:var(--good)}.tile.c.got em{color:#B6E3B0}
+.tile.told em{color:var(--good);opacity:.45}.tile.c.told em{color:#B6E3B0}
+.tile.nobody{border-color:var(--bad);box-shadow:0 0 0 1.5px var(--bad)}.tile.nobody em{color:var(--bad)}.tile.c.nobody em{color:#FFB3AB}
 .scr{background:#111;border-radius:4px;padding:2px;transition:transform .2s}
 .scr svg{display:block;width:100%;border-radius:2px}
 .scr.flick{animation:flick .28s}
@@ -111,7 +123,7 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .street{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:8px 10px}
 .street .lab{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
 .street .lab b{color:var(--ink);font-size:13px}
-.houses{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));column-gap:6px;row-gap:20px;padding-top:14px}
+.houses{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));column-gap:6px;row-gap:8px;padding-top:2px}
 .house{position:relative}
 .house .hbox{position:relative}
 .house svg.base{display:block;width:100%}
@@ -211,7 +223,9 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
       <div><div class="scr" style="background:#111"><svg viewBox="0 0 60 44" id="bC"></svg></div>the common code</div>
     </div>
     <p>Your <b>salary</b> follows your approval. Your <b>bonus</b> comes from every pink screen. If approval drops below one half, you are out. You have forty years.</p>
-    <p style="color:var(--muted);font-size:14px">Watch the street.</p>
+    <h3 style="margin-top:14px">How it works</h3>
+    <p>Every household watches two of your shows a year, picked at random from your screens. Anyone can miss a show now and then, and a show in your code is lost on most people who can't read it. When people miss a show, they ask around. If someone got it, fine. If nobody did, they conclude it wasn't meant for them. If that happens with both their shows in a year, they hold a grudge. Grudges fade, but slowly. Over time some people learn your code: from friends who already read it, or at school.</p>
+    <p id="bHow" style="font-weight:700"></p>
     <div class="actions"><button onclick="show('start')">Back</button><button class="primary" onclick="startGame()">Take the job</button></div>
   </div>
 </section>
@@ -227,14 +241,15 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
   <!-- 1 decide -->
   <div class="view" id="vDecide">
     <div class="paperstrip" id="stripD"><div class="mh">The Evening Standard-Bearer</div><div class="hl" id="hlD"></div></div>
-    <div class="wallbox"><div class="wall" id="wall"></div></div>
-    <div class="till"><div><small>salary so far</small><b id="tSal">0k</b></div><div><small>bonus so far</small><b id="tBon" style="color:var(--pink)">0k</b></div><div class="tot"><small>total</small><b id="tTot">0k</b></div></div>
+    <div class="polls" id="pollsD"></div>
+    <div id="studioStreets"></div>
+    <div class="wallbox small"><div class="wall wide" id="wall"></div></div>
     <div class="panel">
       <div class="codebox a"><svg viewBox="0 0 60 44" id="pA"></svg>your code<span class="n" id="nA">8</span></div>
       <div class="steppers"><button id="plus" aria-label="More of your code">+</button><button id="minus" aria-label="Less of your code">−</button></div>
       <div class="codebox c"><svg viewBox="0 0 60 44" id="pC"></svg>common code<span class="n" id="nC">12</span></div>
     </div>
-    <div class="polls" id="pollsD"></div>
+    <div class="till"><div><small>salary so far</small><b id="tSal">0k</b></div><div><small>bonus so far</small><b id="tBon" style="color:var(--pink)">0k</b></div><div class="tot"><small>total</small><b id="tTot">0k</b></div></div>
   </div>
 
   <!-- 2 on air -->
@@ -242,11 +257,11 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
     <div class="season" id="season"></div>
     <div class="mini" id="mini"></div>
     <div class="caption" id="caption"></div>
-    <div class="streets">
+    <div id="airStreets"><div id="streetsBox"><div class="streets">
       <div class="street"><div class="lab"><b>A street in the West</b><span>70% of viewers</span></div><div class="houses" id="hW"></div></div>
       <div class="street"><div class="lab"><b>A street in the East</b><span>30% of viewers</span></div><div class="houses" id="hE"></div></div>
     </div>
-    <div class="legend">Pink windows are your people. Red bars on a door are grudges not yet forgotten. A teak house with a pink chair has learned your code.</div>
+    <div class="legend">Pink windows are your people. A teak house with a pink chair has learned your code.<span class="aironly"> Above each house, the two shows it watched this year: ✓ got it, faint ✓ someone explained it, ✗ nobody around got it.</span> Red bars on a door are grudges not yet forgotten.</div></div></div>
   </div>
 
   <!-- 3 polls -->
@@ -329,10 +344,10 @@ const CC=(()=>{
 
 /* ===== Countries ===== */
 const COUNTRIES=[
- {id:'placidia',name:'Placidia',on:true,diff:2,tease:'A steady country. Your tastes stay put, and nobody learns your code.',chips:['steady taste','no learning'],P:{}},
- {id:'narcissia',name:'Narcissia',on:true,diff:3,tease:'The more of your code you show, the more you love it.',chips:['taste grows','no learning'],P:{eta:0.0004}},
+ {id:'placidia',how:"In Placidia nobody learns your code. Friends stick to their own kind, and the schools don't teach it.",name:'Placidia',on:true,diff:2,tease:'A steady country. Your tastes stay put, and nobody learns your code.',chips:['steady taste','no learning'],P:{}},
+ {id:'narcissia',how:"In Narcissia nobody learns your code. Friends stick to their own kind, and the schools don't teach it. And the more of your code you show, the more you love it.",name:'Narcissia',on:true,diff:3,tease:'The more of your code you show, the more you love it.',chips:['taste grows','no learning'],P:{eta:0.0004}},
  {id:'spera',name:'Spera',on:false,diff:2,tease:'Neighbours teach each other your code. The East has few teachers.',chips:['neighbours teach'],P:{kappa:0.03}},
- {id:'amoria',name:'Amoria',on:true,diff:4,tease:'You fall for your code, and neighbours pass it on.',chips:['taste grows','neighbours teach'],P:{eta:0.0004,kappa:0.03}},
+ {id:'amoria',how:"In Amoria friends who read your code pass it on, but East and West rarely mix, and the schools don't teach it. And the more of your code you show, the more you love it.",name:'Amoria',on:true,diff:4,tease:'You fall for your code, and neighbours pass it on.',chips:['taste grows','neighbours teach'],P:{eta:0.0004,kappa:0.03}},
  {id:'semidocta',name:'Semidocta',on:false,diff:3,tease:'The schools teach your code. A little.',chips:['a little schooling'],P:{eta:0.0001,s:0.001}},
  {id:'academia',name:'Academia',on:false,diff:1,tease:'The schools teach your code properly.',chips:['good schools'],P:{eta:0.0001,s:0.05}},
  {id:'obstinata',name:'Obstinata',on:false,diff:2,tease:'None of your people live in the East.',chips:['no pink in the East','neighbours teach'],P:{eta:0.0001,kappa:0.03,alE:0}},
@@ -363,7 +378,7 @@ $('countries').innerHTML=COUNTRIES.map((c,i)=>`<div class="card ${c.on?'':'locke
   <div class="tease">${c.tease}</div><div class="chips">${c.chips.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`).join('');
 $('bA').innerHTML=A_PIC;$('bC').innerHTML=C_PIC;$('pA').innerHTML=A_PIC;$('pC').innerHTML=C_PIC;
 let CUR=null;
-function pick(i){CUR=COUNTRIES[i];$('bTitle').textContent=CUR.name;$('bTease').textContent=CUR.tease;show('brief');}
+function pick(i){CUR=COUNTRIES[i];$('bTitle').textContent=CUR.name;$('bTease').textContent=CUR.tease;$('bHow').textContent=CUR.how||'';show('brief');}
 
 /* ===== Game state ===== */
 let G=null, playing=false, rush=false;
@@ -418,6 +433,7 @@ function wait(ms){return new Promise(res=>{const t0=performance.now();const f=()
 
 /* ----- studio ----- */
 function enterDecide(){
+  placeStreets('studioStreets');clearTiles();
   $('hlD').textContent=G.headline;
   $('pollsD').innerHTML=pollsHTML('d',false);fillPolls('d',G.lastV,null,false);
   paintWall('wall',false);renderTill();setNext('Broadcast the year',true);
@@ -578,7 +594,7 @@ function faceSVG(kind,mood){
 }
 function buildStreets(){
   for(const r of ['W','E']){
-    $('h'+r).innerHTML=G.streets[r].map((h,i)=>`<div class="house" id="h${r}${i}"><div class="hbox">${baseSVG(h.kind)}<div class="glow"></div><div class="face"></div></div><div class="say">?</div><div class="reply"></div><div class="pips"></div><div class="marks"></div></div>`).join('');
+    $('h'+r).innerHTML=G.streets[r].map((h,i)=>`<div class="house" id="h${r}${i}"><div class="shows"></div><div class="hbox">${baseSVG(h.kind)}<div class="glow"></div><div class="face"></div></div><div class="say">?</div><div class="reply"></div><div class="pips"></div><div class="marks"></div></div>`).join('');
     G.streets[r].forEach(h=>{h.M=0;h.lit=false;});
   }
 }
@@ -608,67 +624,55 @@ function caption(t){$('caption').innerHTML=t;}
 
 async function stageAir(){
   goStage(1);playing=true;rush=false;setNext('',false);
-  const Y=G.year,ps=pinkSet(G.k),m=G.P.m;
+  placeStreets('airStreets');clearTiles();
+  const Y=G.year,ps=pinkSet(G.k),S=Y.seasons[0];
   $('mini').innerHTML=[...Array(NSCR).keys()].map(i=>`<i style="background:${ps.has(i)?'#F4C0D1':'#6B4226'}"></i>`).join('');
   const all=[];for(let i=0;i<12;i++)for(const r of ['W','E'])all.push([r,i]);
-  const clearAll=()=>all.forEach(([r,i])=>{setGlow(r,i,null);setFace(r,i,null);setSay(r,i,null);setReply(r,i,null);setPips(r,i,0);});
-  for(let s=0;s<Y.seasons.length;s++){
-    const S=Y.seasons[s],full=true,yr=G.t-Y.seasons.length+s+1,SN='This year';
-    const sub=t=>{$('season').innerHTML=`<b>Year ${yr}</b><span>${t}</span>`;};
-    const T=full?{glow:1000,hold:700,face:90,faces:1600,ask:1700,ans:2400,res:900,grudge:2400}
-               :{glow:280,hold:150,face:15,faces:450,ask:550,ans:800,res:300,grudge:1100};
-    // season summary per household, from the episode-by-episode draws
-    const missed={W:[],E:[]},bad={W:[],E:[]};
-    for(const [r,i] of all){missed[r][i]=S.sundays.some(D=>D.faces[r][i]==='frown');bad[r][i]=S.sundays.every(D=>D.says[r][i]);}
-    const askers=all.filter(([r,i])=>{const h=G.streets[r][i];return h.kind==='C'&&!h.lit&&missed[r][i];});
-    clearAll();
-    // 1 on air
-    sub('On air');
-    caption(full?`<b>On air.</b> Each household watches its episodes. <span class="pk">Pink light</span>: your code. <span class="am">Warm light</span>: the common code.`:`<b>${SN}.</b> On air.`);
-    for(const D of S.sundays){
-      const mm=$('mini');mm.classList.remove('flash');void mm.offsetWidth;mm.classList.add('flash');
-      all.forEach(([r,i])=>setGlow(r,i,D.codes[r][i]?'a':'c'));await wait(T.glow);
-    }
-    await wait(T.hold);
-    all.forEach(([r,i])=>setGlow(r,i,null));
-    // 2 who missed something
-    sub('Who missed something?');
-    caption(full?'<b>Who missed something?</b> A frown: this household didn’t get at least one episode.':`<b>${SN}.</b> Who missed something?`);
-    for(let i=0;i<12;i++){for(const r of ['W','E'])setFace(r,i,missed[r][i]?'frown':'smile');await wait(T.face);}
-    await wait(T.faces);
-    // 3 they ask
-    sub('They ask');
-    caption(full?'<b>They ask around.</b> Those who missed something and can’t read your code ask people who watched: <i>did you get it?</i>':`<b>${SN}.</b> They ask.`);
-    if(full&&!askers.length) caption('<b>They ask around.</b> Nobody here missed anything they couldn’t read. A good year.');
-    askers.forEach(([r,i])=>setSay(r,i,'ask'));
-    await wait(T.ask);
-    // 4 the answers
-    sub('The answers');
-    caption(full?'<b>The answers.</b> <span style="color:var(--good);font-weight:700">✓</span> someone had got it at least once: just bad luck. <span style="color:var(--bad);font-weight:700">✗</span> every time, nobody had: “that wasn’t meant for us.”':`<b>${SN}.</b> The answers.`);
-    askers.forEach(([r,i])=>setReply(r,i,bad[r][i]?'no':'ok'));
-    await wait(T.ans);
-    askers.forEach(([r,i])=>{if(bad[r][i])setSay(r,i,'red');else{setSay(r,i,null);setReply(r,i,null);}});
-    await wait(T.res);
-    // 5 grudges land, old ones fade
-    sub('Grudges');
-    let nNew=0,nGone=0;
-    for(const [r,i] of all){const h=G.streets[r][i];setSay(r,i,null);setReply(r,i,null);
-      if(h.kind!=='C'||h.lit)continue;
-      let gone=0;for(let k=0;k<h.M;k++)if(G.rand()<G.P.theta)gone++;
-      const add=bad[r][i]?1:0;h.M=h.M-gone+add;nNew+=add;nGone+=gone;
-      renderMarks(r,i,add,gone);
-      if(add){const el=HE(r,i);el.classList.remove('hurt');void el.offsetWidth;el.classList.add('hurt');}
-    }
-    caption(full?`<b>Grudges.</b> Every ✗ goes on the door${nNew?`: ${nNew} new this year`:''}. Old grudges slowly fade${nGone?`: ${nGone} forgotten`:''}.`
-                :`<b>${SN}.</b> ${nNew} new grudge${nNew===1?'':'s'}, ${nGone} forgotten.`);
-    await wait(T.grudge);
-    all.forEach(([r,i])=>setFace(r,i,null));
-    syncLit(S.after,true);
+  all.forEach(([r,i])=>{setFace(r,i,null);setGlow(r,i,null);});
+  $('season').innerHTML=`<b>Year ${G.t}</b><span>On air</span>`;
+  // beat 1: the screens flicker in every window
+  caption('<b>They watch your show.</b> Some get it, some don’t.');
+  const t0=performance.now();
+  while(!rush&&performance.now()-t0<5000){
+    for(const [r,i] of all) if(G.rand()<0.35) setGlow(r,i,G.rand()<Y.pi?'a':'c');
+    const mm=$('mini');if(G.rand()<0.3){mm.classList.remove('flash');void mm.offsetWidth;mm.classList.add('flash');}
+    await wait(260);
   }
-  $('season').innerHTML=`<b>Year ${G.t}</b><span>Over</span>`;
-  caption('<b>The year is over.</b> Now the polls.');
+  all.forEach(([r,i])=>setGlow(r,i,null));
+  // beat 2: each house's two shows, faces, grudges, learning
+  $('season').innerHTML=`<b>Year ${G.t}</b><span>The year is over</span>`;
+  caption('<b>The year is over.</b> Some are happy with your show. Others complain.');
+  for(let row=0;row<2;row++){
+    for(const r of ['W','E'])for(let c=0;c<6;c++){const i=row*6+c;setTiles(r,i,S.sundays.map(D=>tileOf(r,i,D)));}
+    await wait(500);
+  }
+  await wait(900);
+  const sad={W:[],E:[]};
+  for(let i=0;i<12;i++){for(const r of ['W','E']){sad[r][i]=S.bad[r][i]===G.P.m;setFace(r,i,sad[r][i]?'frown':'smile');}await wait(70);}
+  await wait(900);
+  for(const [r,i] of all){const h=G.streets[r][i];
+    if(h.kind!=='C'||h.lit)continue;
+    let gone=0;for(let k=0;k<h.M;k++)if(G.rand()<G.P.theta)gone++;
+    const add=sad[r][i]?1:0;h.M=h.M-gone+add;renderMarks(r,i,add,gone);
+    if(add){const el=HE(r,i);el.classList.remove('hurt');void el.offsetWidth;el.classList.add('hurt');}
+  }
+  await wait(700);
+  syncLit(S.after,true);
   playing=false;rush=false;setNext('See the polls',true);
 }
+function tileOf(r,i,D){
+  const h=G.streets[r][i],code=D.codes[r][i]?'a':'c';
+  let mark='got';
+  if(D.faces[r][i]==='frown') mark=(h.kind==='C'&&!h.lit&&D.says[r][i])?'nobody':'told';
+  return {code,mark};
+}
+function setTiles(r,i,tiles){
+  const el=HE(r,i).querySelector('.shows');
+  el.innerHTML=tiles.map(t=>`<span class="tile ${t.code} ${t.mark}"><em>${t.mark==='nobody'?'✗':'✓'}</em></span>`).join('');
+  el.classList.remove('on');void el.offsetWidth;el.classList.add('on');
+}
+function clearTiles(){document.querySelectorAll('.house .shows').forEach(e=>{e.innerHTML='';e.classList.remove('on');});}
+function placeStreets(id){const box=$('streetsBox');if(box.parentNode.id!==id)$(id).appendChild(box);}
 
 /* ----- bursts ----- */
 function bursts(sal,bon,bd){
