@@ -920,8 +920,8 @@ function endGame(){
   const zero=R_GAME*(0.5+P.beta)*SCALE*YEARS; // what a director who never shows a pink screen earns
   const score=Math.max(-100,Math.round(100*(G.score-zero)/(CUR.best-zero)));
   const LADDER=[[0,'no better than a test card','TEST CARD','#7A6E63','#fff'],[20,'a tad better than a test card','A TAD BETTER|THAN A TEST CARD','#C9BBA4','#2B2420'],
-    [40,'late-night filler','LATE-NIGHT|FILLER','#F1E4CC','#2B2420'],[55,'daytime television','DAYTIME|TELEVISION','#F4C0D1','#72243E'],[70,'prime time','PRIME TIME','#ED93B1','#4B1528'],
-    [85,'a hit','A HIT','#D4537E','#fff'],[95,'the talk of the nation','THE TALK OF|THE NATION','#E8B931','#2B2420'],[101,'a classic','A CLASSIC','#FFD23F','#2B2420']];
+    [40,'a late-night filler','LATE-NIGHT|FILLER','#F1E4CC','#2B2420'],[55,'solid daytime television','SOLID DAYTIME|TELEVISION','#F4C0D1','#72243E'],[70,'prime time','PRIME TIME','#ED93B1','#4B1528'],
+    [85,'quite a hit','QUITE A HIT','#D4537E','#fff'],[95,'the talk of the nation','THE TALK OF|THE NATION','#E8B931','#2B2420'],[101,'a classic','A CLASSIC','#FFD23F','#2B2420']];
   const grade=LADDER.find(g=>score<g[0]).slice(1); // [sentence, card label, fill, text colour]
   scoreTV(score,grade);
   $('eShow').innerHTML=`Your show was <b>${grade[0]}</b>.`;
