@@ -225,6 +225,10 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 @keyframes rise{0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.1)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-260%) scale(.9)}}
 .paynote{text-align:center;font-size:14px;color:var(--muted);margin:8px 0 2px;min-height:20px}
 .paynote b{color:var(--pinkdk)}
+.scoreburst{position:relative;width:240px;height:200px;margin:4px auto 0;animation:pop .6s}
+.scoreburst svg{position:absolute;inset:0;width:100%;height:100%}
+.scoreburst span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2B2420;font-weight:900;font-size:50px;line-height:1}
+.scoreburst span small{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;max-width:130px;text-align:center;line-height:1.25}
 /* end */
 .endbox{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:16px;margin-top:8px}
 .endbox h2{font-size:30px;line-height:1.1}
@@ -239,6 +243,7 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .ckey{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:3px}
 .ckey span::before{content:"";display:inline-block;width:14px;height:3px;margin-right:4px;vertical-align:middle;background:var(--c)}
 .reveal{background:var(--cream);border-radius:6px;padding:10px;font-size:14px;line-height:1.5;margin-top:12px}
+.reveal a{color:var(--pinkdk);font-weight:700}
 .reveal code{font-family:inherit;font-weight:700}
 </style>
 </head>
@@ -272,14 +277,15 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
   <div class="brief">
     <h2 id="bTitle"></h2>
     <div id="bTease" style="color:var(--muted);font-size:14px"></div>
-    <p>You run national television. Every year you decide how many of the twenty screens show <b>your code</b>: the look of your own milieu, shell chairs and lofts and primary-colour geometry. The rest show <b>the common code</b> that everybody understands: teak cabinets, sofas, family dinners.</p>
+    <p>You run national television. Every year you decide how many of the twenty screens show <b>your code</b>: the look of your own milieu, shell chairs, lofts, primary colours. The rest show <b>the common code</b> that everybody understands: teak wall cabinets, sofas, family dinners.</p>
     <div class="codes">
       <div><div class="scr" style="background:#111"><svg viewBox="0 0 60 44" id="bA"></svg></div>your code</div>
       <div><div class="scr" style="background:#111"><svg viewBox="0 0 60 44" id="bC"></svg></div>the common code</div>
     </div>
-    <p>Your <b>salary</b> follows your approval. Your <b>bonus</b> comes from every pink screen. If approval drops below one half, you are out. You have forty years.</p>
+    <p>Your <b>salary</b> follows your approval. Your <b>bonus</b> comes from every pink screen. If approval drops below one half, you are out. You have twenty years.</p>
     <h3 style="margin-top:14px">How it works</h3>
-    <p>Every household watches two of your shows a year, picked at random from your screens. Anyone can miss a show now and then, and a show in your code is lost on most people who can't read it. When people miss a show, they ask around. If someone got it, fine. If nobody did, they conclude it wasn't meant for them. If that happens with both their shows in a year, they hold a grudge. Grudges fade, but slowly. Over time some people learn your code: from friends who already read it, or at school.</p>
+    <p>Every household watches two of your shows a year, picked at random from your screens. Anyone can miss a show now and then, and a show in your code is lost on most people who can't read it. When people miss a show, they ask around. If someone got it, fine. If nobody did, they conclude it wasn't meant for them. If that happens with both their shows in a year, they hold a grudge. Grudges fade over time. Over time some people learn your code: from friends who already read it, or at school.</p>
+    <p>Your polls are surveys, so they can be off by a point or two. The board counts the real thing.</p>
     <p id="bHow" style="font-weight:700"></p>
     <div class="actions"><button onclick="show('start')">Back</button><button class="primary" onclick="startGame()">Take the job</button></div>
   </div>
@@ -319,8 +325,8 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
     <div class="mini" id="mini"></div>
     <div class="caption" id="caption"></div>
     <div id="airStreets"><div id="streetsBox"><div class="streets">
-      <div class="street"><div class="lab"><b>A street in the West</b><span>70% of viewers</span></div><div class="houses" id="hW"></div></div>
-      <div class="street"><div class="lab"><b>A street in the East</b><span>30% of viewers</span></div><div class="houses" id="hE"></div></div>
+      <div class="street"><div class="lab"><b>A street in the West</b><span id="shareW">70% of viewers</span></div><div class="houses" id="hW"></div></div>
+      <div class="street"><div class="lab"><b>A street in the East</b><span id="shareE">30% of viewers</span></div><div class="houses" id="hE"></div></div>
     </div>
     <div class="legend">Pink windows are your people. A teak house with a pink chair has learned your code.<span class="aironly"> Above each house, the two shows it watched this year: ✓ got it, white ✓ someone explained it, ✗ nobody around got it.</span> Red bars on a door are grudges not yet forgotten.</div></div></div>
   </div>
@@ -352,17 +358,12 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 <section id="end" class="hidden">
   <div class="endbox">
     <h2 id="eTitle"></h2>
+    <div class="scoreburst" id="eBurst"></div>
     <div class="verdict" id="eVerdict"></div>
     <div class="stats" id="eStats"></div>
-    <div class="charts">
-      <div class="chart"><h4>Share of your code on the screen</h4><canvas id="c1"></canvas><div class="ckey"><span style="--c:var(--pink2)">you</span><span style="--c:#888">Lena</span></div></div>
-      <div class="chart"><h4>Approval</h4><canvas id="c2"></canvas><div class="ckey"><span style="--c:var(--ink)">you</span><span style="--c:#888">Lena</span></div></div>
-      <div class="chart"><h4>Who could read your code (hidden during play)</h4><canvas id="c3"></canvas><div class="ckey"><span style="--c:var(--blue)">West</span><span style="--c:var(--red)">East</span></div></div>
-      <div class="chart"><h4>Unforgotten bad years per viewer who can't read your code (hidden)</h4><canvas id="c4"></canvas><div class="ckey"><span style="--c:var(--blue)">West</span><span style="--c:var(--red)">East</span></div></div>
-      <div class="chart"><h4>Your taste for your own code (hidden)</h4><canvas id="c5"></canvas><div class="ckey"><span style="--c:var(--pink2)">bonus per pink screen, relative to year 1</span></div></div>
-    </div>
+    <div class="chart"><h4>Approval, year by year</h4><canvas id="c2"></canvas><div class="ckey"><span style="--c:var(--ink)">real approval</span><span style="--c:#B9AE9F">your polls</span></div></div>
     <div class="reveal" id="eReveal"></div>
-    <div class="actions" style="margin-top:14px"><button onclick="show('start')">Other countries</button><button class="primary" onclick="startGame()">Play again</button></div>
+    <div class="actions" style="margin-top:14px"><button onclick="show('start');tune('THE SCREEN',600)">Other countries</button><button class="primary" onclick="startGame()">Play again</button></div>
   </div>
 </section>
 
@@ -412,20 +413,24 @@ const CC=(()=>{
 
 /* ===== Countries ===== */
 const COUNTRIES=[
- {id:'placidia',how:"In Placidia nobody learns your code. Friends stick to their own kind, and the schools don't teach it.",name:'Placidia',on:true,diff:2,tease:'A steady country. Your tastes stay put, and nobody learns your code.',chips:['steady taste','no learning'],P:{}},
- {id:'narcissia',how:"In Narcissia nobody learns your code. Friends stick to their own kind, and the schools don't teach it. And the more of your code you show, the more you love it.",name:'Narcissia',on:true,diff:3,tease:'The more of your code you show, the more you love it.',chips:['taste grows','no learning'],P:{eta:0.0004}},
- {id:'spera',name:'Spera',on:false,diff:2,tease:'Neighbours teach each other your code. The East has few teachers.',chips:['neighbours teach'],P:{kappa:0.03}},
- {id:'amoria',how:"In Amoria friends who read your code pass it on, but East and West rarely mix, and the schools don't teach it. And the more of your code you show, the more you love it.",name:'Amoria',on:true,diff:4,tease:'You fall for your code, and neighbours pass it on.',chips:['taste grows','neighbours teach'],P:{eta:0.0004,kappa:0.03}},
- {id:'semidocta',name:'Semidocta',on:false,diff:3,tease:'The schools teach your code. A little.',chips:['a little schooling'],P:{eta:0.0001,s:0.001}},
- {id:'academia',name:'Academia',on:false,diff:1,tease:'The schools teach your code properly.',chips:['good schools'],P:{eta:0.0001,s:0.05}},
- {id:'obstinata',name:'Obstinata',on:false,diff:2,tease:'None of your people live in the East.',chips:['no pink in the East','neighbours teach'],P:{eta:0.0001,kappa:0.03,alE:0}},
- {id:'hermetica',name:'Hermetica',on:false,diff:5,tease:'To outsiders your code means nothing at all.',chips:['blank to outsiders','neighbours teach'],P:{eta:0.0001,kappa:0.03,phi:1.0}},
- {id:'garrulia',name:'Garrulia',on:false,diff:3,tease:'East and West talk to each other.',chips:['East meets West','neighbours teach'],P:{eta:0.0001,kappa:0.03,omega:0.1}},
- {id:'occidentia',name:'Occidentia',on:false,diff:1,tease:'The East is small.',chips:['small East','neighbours teach'],P:{eta:0.0001,kappa:0.03,muE:0.1,muW:0.9}},
- {id:'bipartia',name:'Bipartia',on:false,diff:5,tease:'East and West are the same size.',chips:['big East','neighbours teach'],P:{eta:0.0001,kappa:0.03,muE:0.5,muW:0.5}},
- {id:'lethe',name:'Lethe',on:false,diff:1,tease:'People forget their grudges quickly.',chips:['short grudges','neighbours teach'],P:{eta:0.0001,kappa:0.03,theta:0.2}},
+ {id:'placidia',name:'Placidia',diff:1,best:2896,tease:'A steady country. Your tastes stay put, and nobody learns your code.',chips:['steady taste','no learning'],P:{},
+  how:"In Placidia nobody learns your code. Friends stick to their own kind, and the schools don't teach it."},
+ {id:'semidocta',name:'Semidocta',diff:2,best:3223,tease:'The schools teach your code. A little.',chips:['a little schooling'],P:{eta:0.0001,s:0.001},
+  how:"In Semidocta the schools teach your code, a little. Friends stick to their own kind. And the more of your code you show, the more you love it, a little."},
+ {id:'narcissia',name:'Narcissia',diff:3,best:4039,tease:'The more of your code you show, the more you love it.',chips:['taste grows','no learning'],P:{eta:0.0004},
+  how:"In Narcissia nobody learns your code. Friends stick to their own kind, and the schools don't teach it. And the more of your code you show, the more you love it."},
+ {id:'amoria',name:'Amoria',diff:3,best:4444,tease:'You fall for your code, and friends pass it on.',chips:['taste grows','friends teach'],P:{eta:0.0004,kappa:0.03},
+  how:"In Amoria friends who read your code pass it on, but East and West rarely mix, and the schools don't teach it. And the more of your code you show, the more you love it."},
+ {id:'hermetica',name:'Hermetica',diff:4,best:3009,tease:'To outsiders your code means nothing at all.',chips:['blank to outsiders','friends teach'],P:{eta:0.0001,kappa:0.03,phi:1.0},
+  how:"In Hermetica your code means nothing to anyone who can't read it: they miss every show in it. Some learn it from friends; the schools don't teach it."},
+ {id:'bipartia',name:'Bipartia',diff:5,best:2977,tease:'East and West are the same size.',chips:['big East','friends teach'],P:{eta:0.0001,kappa:0.03,muE:0.5,muW:0.5},
+  how:"In Bipartia East and West are the same size, and your own people live mostly in the West. Some learn your code from friends; the schools don't teach it."},
 ];
-const R_GAME=0.02, SCALE=10000, YEARS=40, SPY=1, NSCR=20;
+const R_GAME=0.02, SCALE=10000, YEARS=20, SPY=1, NSCR=20;
+// The game runs the model of Closed Codes on a faster clock: every rate doubled, every long-run level kept.
+const FAST=P=>Object.assign({},P,{theta:P.theta*2,eps:P.eps*2,zeta:P.zeta*2,eta:P.eta*4,kappa:P.kappa*2,s:P.s*2,delta0:P.delta0*2,rho:P.rho*2});
+const POLL_SD={N:0.01,W:0.012,E:0.018};
+const PAPER_URL='https://steffenhuck.github.io/drafts/closed_codes.pdf';
 
 /* ===== Pictures ===== */
 const A_PIC='<rect width="60" height="44" fill="#F4C0D1"/><circle cx="12" cy="11" r="5" fill="#D4537E"/><path d="M22 14 Q30 30 44 16 L46 20 Q32 36 20 18 Z" fill="#72243E"/><rect x="30" y="27" width="2.5" height="11" fill="#72243E"/><path d="M24 38 L38 38" stroke="#72243E" stroke-width="2.5"/>';
@@ -491,8 +496,8 @@ async function tune(label,ms){
   if(!REDUCED){card.classList.remove('roll');void card.offsetWidth;card.classList.add('roll');}
 }
 tune('THE SCREEN',1500);
-$('countries').innerHTML=COUNTRIES.map((c,i)=>`<div class="card ${c.on?'':'locked'}" ${c.on?`onclick="pick(${i})"`:''}>
-  ${c.on?'':'<span class="soon">soon</span>'}<h3>${c.name}</h3><div class="dots">${'●'.repeat(c.diff)}${'○'.repeat(5-c.diff)}</div>
+$('countries').innerHTML=COUNTRIES.map((c,i)=>`<div class="card" onclick="pick(${i})">
+  <h3>${c.name}</h3><div class="dots">${'●'.repeat(c.diff)}${'○'.repeat(5-c.diff)}</div>
   <div class="tease">${c.tease}</div><div class="chips">${c.chips.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`).join('');
 $('bA').innerHTML=A_PIC;$('bC').innerHTML=C_PIC;$('pA').innerHTML=A_PIC;$('pC').innerHTML=C_PIC;
 let CUR=null;
@@ -521,10 +526,11 @@ function makeStreet(rand,nA){ // 12 houses: nA of milieu A, rest teak; threshold
   return hs;
 }
 function startGame(){
-  const P=Object.assign({},CC.P0,CUR.P);
+  const P=FAST(Object.assign({},CC.P0,CUR.P));
+  $('shareW').textContent=Math.round(100*P.muW)+'% of viewers';$('shareE').textContent=Math.round(100*P.muE)+'% of viewers';
   const rand=rng(Date.now());
   G={P,st:CC.init(P),t:0,k:8,score:0,sal:0,bon:0,ousted:null,rand,
-     hist:{pi:[],V:[],VW:[],VE:[],lW:[],lE:[],SW:[],SE:[],psi:[]},fired:new Set(),
+     hist:{pi:[],V:[],poll:[],VW:[],VE:[],lW:[],lE:[],SW:[],SE:[],psi:[]},trueV:{W:.55,E:.55,N:.55},fired:new Set(),
      shownV:{W:.55,E:.55,N:.55},lastV:{W:.55,E:.55,N:.55},
      streets:{W:makeStreet(rand,Math.round(12*P.alW)),E:makeStreet(rand,Math.max(Math.round(12*P.alE),P.alE>0?1:0))},
      dipped:false,dSal:0,dBon:0,year:null,headline:'New Director-General takes over the national broadcaster',ticker:['NEW DIRECTOR-GENERAL TAKES OVER THE NATIONAL BROADCASTER','SUPPORT FOR THE BROADCASTER AT 55% IN EAST AND WEST']};
@@ -612,7 +618,7 @@ function drawSpark(id,upto){
   const lo=0.42,hi=0.58,T=YEARS*SPY,Y=v=>H-(v-lo)/(hi-lo)*H;
   x.strokeStyle='#2B2420';x.setLineDash([3,3]);x.lineWidth=1;x.beginPath();x.moveTo(0,Y(.5));x.lineTo(W,Y(.5));x.stroke();x.setLineDash([]);
   x.fillStyle='#7A6E63';x.font='10px sans-serif';x.fillText('50%',2,Y(.5)-3);
-  const V=G.hist.V.slice(0,upto);if(!V.length)return;x.strokeStyle='#2B2420';x.lineWidth=1.8;x.beginPath();
+  const V=G.hist.poll.slice(0,upto);if(!V.length)return;x.strokeStyle='#2B2420';x.lineWidth=1.8;x.beginPath();
   V.forEach((v,i)=>{const px=i/(T-1)*W,py=Y(Math.max(lo,Math.min(hi,v)));i?x.lineTo(px,py):x.moveTo(px,py);});x.stroke();
   const lv=V[V.length-1],lx=(V.length-1)/(T-1)*W;x.fillStyle='#2B2420';x.beginPath();x.arc(Math.max(3,lx),Y(Math.max(lo,Math.min(hi,lv))),3,0,7);x.fill();
 }
@@ -621,6 +627,7 @@ function drawSpark(id,upto){
 function tickerItems(Y){
   const out=[],P=Y.prevV,L=G.lastV,pt=x=>(100*x).toFixed(1)+'%';
   if(Y.news)out.push(Y.news.toUpperCase());
+  if(G.ousted!==null)out.push(`THE BOARD'S OWN COUNT: ${pt(G.trueV.N)}. THE DIRECTOR-GENERAL IS OUT`);
   for(const [k,name,th] of [['N','NATIONWIDE',0.003],['E','EAST',0.006],['W','WEST',0.006]]){
     const d=L[k]-P[k];
     if(P[k]>=0.5&&L[k]<0.5)out.push(`${name}: SUPPORT DROPS BELOW HALF, NOW ${pt(L[k])}`);
@@ -688,8 +695,10 @@ function broadcast(){
     const sal=R_GAME*o.V*SCALE,bon=o.psi*pi*SCALE;
     G.score+=sal+bon;G.sal+=sal;G.bon+=bon;Y.sal+=sal;Y.bon+=bon;
     const H=G.hist;H.pi.push(pi);H.V.push(o.V);H.VW.push(o.reg.W);H.VE.push(o.reg.E);H.lW.push(G.st[0]);H.lE.push(G.st[1]);H.SW.push(G.st[2]);H.SE.push(G.st[3]);H.psi.push(o.psi);
-    G.lastV={W:o.reg.W,E:o.reg.E,N:o.V};
-    if(o.V<0.51)G.dipped=true;
+    G.trueV={W:o.reg.W,E:o.reg.E,N:o.V};
+    const gs=()=>{let u=0,v=0;while(!u)u=G.rand();while(!v)v=G.rand();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);};
+    G.lastV={W:o.reg.W+POLL_SD.W*gs(),E:o.reg.E+POLL_SD.E*gs(),N:o.V+POLL_SD.N*gs()};H.poll.push(G.lastV.N);
+    if(G.lastV.N<0.51)G.dipped=true;
     Y.seasons.push({before,after:G.st.slice(),sundays,bad,V:o.V});
     if(o.V<0.5)G.ousted=G.t-1;
   }
@@ -705,14 +714,14 @@ async function stagePolls(){
   const Y=G.year;
   $('pollsP').innerHTML=pollsHTML('p',true);
   // show last year's numbers first, then move to this year's
-  const nBefore=G.hist.V.length-Y.seasons.length;
+  const nBefore=G.hist.poll.length-Y.seasons.length;
   fillPolls('p',Y.prevV,null,false);drawSpark('pspark',nBefore);
   setCrawl('crawlP',['…']);
   await wait(700);
   fillPolls('p',G.lastV,Y.prevV,true);
   // sweep the approval line forward season by season
-  for(let k=nBefore+1;k<=G.hist.V.length;k++){drawSpark('pspark',k);await wait(600);}
-  drawSpark('pspark',G.hist.V.length);
+  for(let k=nBefore+1;k<=G.hist.poll.length;k++){drawSpark('pspark',k);await wait(600);}
+  drawSpark('pspark',G.hist.poll.length);
   await wait(400);setCrawl('crawlP',G.ticker);
   await wait(1200);
   playing=false;rush=false;setNext('Payday',true);
@@ -866,42 +875,27 @@ function bursts(sal,bon,bd){
 }
 
 
-/* ===== Ghost Lena & benchmarks ===== */
-function ghost(P,policy){ // season by season, game scoring, job ends at ousting
-  let st=CC.init(P),score=0,out=null;const pi=[],V=[];
-  for(let t=0;t<YEARS*SPY;t++){const o=policy==='lena'?CC.step(st,P):CC.step(st,P,policy);
-    score+=(R_GAME*o.V+o.psi*o.pi)*SCALE;pi.push(o.pi);V.push(o.V);st=o.state;if(o.V<0.5){out=t;break;}}
-  return {score,out,pi,V};
-}
-
 /* ===== End ===== */
 function endGame(){
   show('end');
-  const H=G.hist,y=Math.floor((G.ousted!==null?G.ousted:G.t-1)/SPY)+1;
-  const lena=ghost(G.P,'lena'),abst=ghost(G.P,0);
-  if(G.ousted!==null){$('eTitle').textContent=`Out after ${y} year${y>1?'s':''}`;}
-  else $('eTitle').textContent='Forty years on air';
-  const lenaTxt=lena.out!==null?`Lena, who each year chose what looked best that year, lost her majority in year ${Math.floor(lena.out/SPY)+1} and earned ${fmt(lena.score)}k.`
-    :`Lena, who each year chose what looked best that year, survived all forty years and earned ${fmt(lena.score)}k.`;
-  const cmp=G.score>lena.score?'You beat her.':'She beat you.';
-  $('eVerdict').innerHTML=`${G.ousted!==null?`Approval fell below one half in year ${y}. `:''}${lenaTxt} ${cmp} A director who never showed a single pink screen would have earned ${fmt(abst.score)}k.`;
-  $('eStats').innerHTML=[['earned',fmt(G.score)+'k'],['of which bonus',fmt(G.bon)+'k'],['lowest approval',pct(Math.min(...H.V))],['Lena earned',fmt(lena.score)+'k']]
+  const H=G.hist,P=G.P,y=G.ousted!==null?G.ousted+1:YEARS;
+  $('eTitle').textContent=G.ousted!==null?`Out after ${y} year${y>1?'s':''}`:'Twenty years on air';
+  const share=Math.round(100*G.score/CUR.best);
+  let pts='';const N=16;for(let i=0;i<2*N;i++){const r=i%2?78:100,a=Math.PI*i/N;pts+=(120+r*Math.cos(a)).toFixed(1)+','+(100+r*Math.sin(a)*.85).toFixed(1)+' ';}
+  const fill=share>=90?'#FFD23F':share>=70?'#F4C0D1':'#F1E4CC';
+  $('eBurst').innerHTML=`<svg viewBox="0 0 240 200"><polygon points="${pts}" fill="${fill}" stroke="#2B2420" stroke-width="4"/></svg><span>${share}%<small>of the best possible run in ${CUR.name}</small></span>`;
+  $('eVerdict').innerHTML=`You earned <b>${fmt(G.score)}k</b>, ${fmt(G.bon)}k of it in bonuses. ${G.ousted!==null?`In year ${y} your real approval fell below one half, and the board let you go.`:`You kept your majority to the end.`}`;
+  $('eStats').innerHTML=[['earned',fmt(G.score)+'k'],['of which bonus',fmt(G.bon)+'k'],['lowest real approval',pct(Math.min(...H.V))],['years on air',String(y)]]
     .map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join('');
-  const T=YEARS*SPY;
-  const P100=v=>(v*100).toFixed(0)+'%';
-  lineChart('c1',[{d:H.pi,c:'#D4537E'},{d:lena.pi,c:'#888',dash:true}],0,1,null,T,P100);
-  const lo=Math.min(0.42,...H.V,...lena.V)-0.005;
-  lineChart('c2',[{d:H.V,c:'#2B2420'},{d:lena.V,c:'#888',dash:true}],lo,0.58,0.5,T,P100);
-  lineChart('c3',[{d:H.lW,c:'#2B4C9A'},{d:H.lE,c:'#C8372D'}],0,1,null,T,P100);
-  const smax=Math.max(1,...H.SW,...H.SE)*1.1;
-  lineChart('c4',[{d:H.SW,c:'#2B4C9A'},{d:H.SE,c:'#C8372D'}],0,smax,null,T,v=>v.toFixed(1));
-  const pmax=Math.max(...H.psi)*1.2,P0d=G.P.delta0;
-  lineChart('c5',[{d:H.psi.map(v=>v/P0d),c:'#D4537E'}],0,Math.max(2,pmax/P0d),null,T,v=>'×'+v.toFixed(1));
-  const P=G.P,traits=[];
-  traits.push(P.eta>0?`your taste grew with use (η = ${P.eta})`:`your taste did not grow (η = 0)`);
-  traits.push(P.kappa>0?`neighbours taught each other your code (κ = ${P.kappa})`:`nobody learned your code from neighbours (κ = 0)`);
-  if(P.s>0)traits.push(`the schools taught it (s = ${P.s})`);
-  $('eReveal').innerHTML=`<b>${CUR.name}</b>: ${traits.join('; ')}. Everything else is the calibration of <i>Closed Codes</i>, Section 4.4. Your salary weighs approval at R = ${R_GAME}; the paper's Lena weighs it at R = 1.`;
+  const P100=v=>(v*100).toFixed(0)+'%',lo=Math.min(0.44,...H.V,...H.poll)-0.005,hi=Math.max(0.58,...H.poll)+0.005;
+  lineChart('c2',[{d:H.poll,c:'#B9AE9F',dash:true},{d:H.V,c:'#2B2420'}],lo,hi,0.5,YEARS,P100);
+  const bits=[];
+  const lE=G.st[1],lW=G.st[0];
+  if(P.kappa>0||P.s>0)bits.push(`by the end ${Math.round(100*lW)}% of the West and ${Math.round(100*lE)}% of the East who once couldn't read your code had learned it`);
+  else bits.push('nobody ever learned your code');
+  const tg=(P.delta0+G.st[4])/P.delta0;
+  if(P.eta>0)bits.push(`your taste for it had grown ${tg.toFixed(1)}-fold`);
+  $('eReveal').innerHTML=`Behind the polls: ${bits.join(', and ')}. The game runs the model of <a href="${PAPER_URL}" target="_blank" rel="noopener">Closed Codes</a> on a faster clock.`;
 }
 function lineChart(id,series,lo,hi,hline,T,lab){
   const c=$(id),dpr=window.devicePixelRatio||1,W=c.clientWidth,Hh=c.clientHeight;c.width=W*dpr;c.height=Hh*dpr;
