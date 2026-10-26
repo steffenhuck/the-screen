@@ -517,6 +517,7 @@ function makeStreet(rand,nA){ // 12 houses: nA of milieu A, rest teak; threshold
   return hs;
 }
 function startGame(){
+  if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'take-the-job-'+CUR.id,title:'Took the job in '+CUR.name,event:true});
   const P=FAST(Object.assign({},CC.P0,CUR.P));
   $('shareW').textContent=Math.round(100*P.muW)+'% of viewers';$('shareE').textContent=Math.round(100*P.muE)+'% of viewers';
   const rand=rng(Date.now());
