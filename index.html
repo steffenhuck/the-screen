@@ -20,7 +20,6 @@ h1,h2,h3{font-weight:700;letter-spacing:.01em;margin:0}
 button{font:inherit;cursor:pointer;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:6px;padding:10px 14px;font-weight:700}
 button:active{transform:translateY(1px)}
 button.primary{background:var(--ink);color:var(--paper)}
-button.pinkbtn{background:var(--pink2);border-color:var(--pinkdk);color:#fff}
 button:disabled{opacity:.4;cursor:default}
 .hidden{display:none!important}
 footer{text-align:center;margin-top:36px}
@@ -47,7 +46,6 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .legs{display:flex;justify-content:space-between;padding:0 14%}
 .legs i{display:block;width:10px;height:22px;background:#2B2420;border-radius:0 0 3px 3px;transform:skewX(-8deg)}
 .legs i+i{transform:skewX(8deg)}
-.intro{font-size:15px;line-height:1.55;margin:16px 0 18px;text-align:center}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .card{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:12px;text-align:left;cursor:pointer;position:relative;min-height:132px;display:flex;flex-direction:column;gap:6px;font-weight:400}
 .card:hover{background:#fff}
@@ -56,9 +54,6 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .card .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
 .chip{font-size:11px;padding:2px 6px;border-radius:10px;background:var(--cream);border:1px solid var(--line);color:var(--muted)}
 .dots{font-size:12px;letter-spacing:2px;color:var(--pink2)}
-.card.locked{cursor:default;border-color:var(--line);background:#EFE8DB}
-.card.locked h3,.card.locked .tease{color:#A69A8C}
-.card.locked .soon{position:absolute;top:10px;right:10px;font-size:10px;letter-spacing:.12em;color:#A69A8C;text-transform:uppercase}
 
 /* briefing */
 .brief{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:18px;margin-top:12px;line-height:1.6;font-size:15px}
@@ -73,10 +68,6 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .score{text-align:right}
 .score b{font-size:20px}
 .score small{display:block;color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
-.paperstrip{background:#fff;border:2px solid var(--ink);border-radius:4px;padding:6px 10px;margin:6px 0 10px;min-height:44px;font-family:Georgia,"Times New Roman",serif;position:relative;overflow:hidden}
-.paperstrip .mh{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);font-family:inherit}
-.paperstrip .hl{font-size:16px;font-weight:700;line-height:1.25}
-.paperstrip.flash{animation:flash .9s}
 @keyframes flash{0%{background:var(--gold)}100%{background:#fff}}
 
 .wallbox{position:relative;background:#2C2C2A;border-radius:10px;padding:8px}
@@ -133,7 +124,6 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--good);transition:width .8s,background .8s}
 .bar .half{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:var(--ink)}
 .bar .moe{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,var(--bad) 0 3px,rgba(255,255,255,.4) 3px 6px);transition:left .8s,width .8s}
-.pv small{font-size:10px;font-weight:600;color:var(--muted);margin-left:2px}
 .pv.risky{color:var(--bad)}
 .moenote{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.35}
 .pv{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
@@ -154,16 +144,6 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .house .face{position:absolute;right:8%;top:22%;width:42%;transform:scale(0);transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
 .house .face svg{display:block;width:100%}
 .house .face.on{transform:scale(1)}
-.house .say{position:absolute;top:-14px;left:-5px;background:#fff;border:2px solid var(--ink);border-radius:10px;font-size:12px;font-weight:800;padding:0 5px;line-height:16px;transform:scale(0);transition:transform .3s cubic-bezier(.3,1.7,.5,1),background .3s,color .3s;z-index:2}
-.house .say.on{transform:scale(1)}
-.house .say.red{background:var(--bad);color:#fff;border-color:var(--bad)}
-.house .reply{position:absolute;top:-14px;right:-5px;width:22px;height:22px;border-radius:50%;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;color:#fff;transform:scale(0);transition:transform .3s cubic-bezier(.3,1.7,.5,1);z-index:2}
-.house .reply.ok{background:var(--good);transform:scale(1)}
-.house .reply.no{background:var(--bad);transform:scale(1)}
-.house.asking .hbox{outline:3px solid var(--ink);outline-offset:2px;border-radius:2px}
-.house.asked .hbox{outline:3px dashed var(--ink);outline-offset:2px;border-radius:2px}
-.house .pips{height:9px;display:flex;justify-content:center;gap:3px;margin-top:3px}
-.house .pips i{width:8px;height:8px;border-radius:50%;background:var(--bad);display:block;animation:pop .3s}
 .house .marks{height:10px;display:flex;justify-content:center;gap:1px;margin-top:1px}
 .house .marks b{width:4px;height:9px;background:var(--bad);border-radius:1px;display:block}
 .house .marks b.new{animation:thud .6s}
@@ -194,9 +174,6 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .mini{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:2px;margin-bottom:10px}
 .mini i{height:14px;border-radius:2px;display:block}
 .mini.flash i{animation:flick .4s}
-.paperstrip.big{padding:12px 14px;min-height:96px}
-.paperstrip.big .hl{font-size:22px}
-.paperstrip.quiet .hl{color:var(--muted);font-weight:400;font-style:italic}
 .payhead{font-size:24px;font-weight:700;margin-bottom:8px}
 .payhead small{display:block;font-size:13px;color:var(--muted);font-weight:400}
 .bigpolls .prow{grid-template-columns:60px 1fr 92px;font-size:15px;margin:12px 0}
@@ -217,7 +194,8 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .crawlwin span{white-space:nowrap;position:absolute;left:0;font-size:15px;will-change:transform;animation:crawl var(--cd,20s) linear infinite}
 .crawl.big{height:44px}.crawl.big .crawlwin span{font-size:18px}
 @keyframes crawl{from{transform:translateX(var(--cw,400px))}to{transform:translateX(-100%)}}
-@media (prefers-reduced-motion: reduce){.crawl{height:auto;min-height:34px}.crawlwin span{position:static;animation:none;white-space:normal;padding:6px 8px}}
+@media (prefers-reduced-motion: reduce){.crawl{height:auto;min-height:34px}.crawlwin span{position:static;animation:none;white-space:normal;padding:6px 8px}
+  .tvend .sweep{transition:none;transform:scale(1)}.tvend .scoretxt{transition:none}.burst,.chip-b,.scr.flip,.scr.flick,.house .marks b.new,.house .marks b.fade,.house.hurt .hbox,.house.learn .hbox,.mini.flash i{animation:none!important}.burst,.chip-b{opacity:1}}
 .house .glow.snow{opacity:1;background-size:cover;image-rendering:pixelated;box-shadow:none}
 .house .glow.snow.a{background-color:#F4C0D1;background-image:none!important;box-shadow:0 0 12px 4px rgba(212,83,126,.7)}
 .house .glow.snow.c{background-color:#8A5A36;background-image:none!important;box-shadow:0 0 12px 4px rgba(232,185,49,.6)}
@@ -234,10 +212,6 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .tvend .sweep.on{transform:scale(1)}
 .tvend .scoretxt{opacity:0;transition:opacity .5s}
 .tvend .scoretxt.on{opacity:1}
-.scoreburst{position:relative;width:240px;height:200px;margin:4px auto 0;animation:pop .6s}
-.scoreburst svg{position:absolute;inset:0;width:100%;height:100%}
-.scoreburst span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:56px;line-height:1}
-.scoreburst span small{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-top:6px;max-width:150px;text-align:center;line-height:1.25}
 /* end */
 .endbox{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:16px;margin-top:8px}
 .endbox h2{font-size:30px;line-height:1.1}
@@ -294,7 +268,7 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
     <p>Your <b>salary</b> follows your approval. Your <b>bonus</b> comes from every pink screen. If approval drops below one half, you are out. You have twenty years.</p>
     <h3 style="margin-top:14px">How it works</h3>
     <p>Every household watches two of your shows a year, picked at random from your screens. Anyone can miss a show now and then, and a show in your code is lost on most people who can't read it. When people miss a show, they ask around. If someone got it, fine. If nobody did, they conclude it wasn't meant for them. If that happens with both their shows in a year, they hold a grudge. Grudges fade over time. Over time some people learn your code: from friends who already read it, or at school.</p>
-    <p>Your polls are surveys and come with a margin of error, shown as a bracket. The board counts the real thing: if real approval is below one half, you are out, whatever the polls said.</p>
+    <p>Your polls are surveys, so each comes as a range, about ±2 points nationally and wider in the East; red marks the part of a range below one half. The board counts the real thing: if real approval is below one half, you are out, whatever the polls said.</p>
     <p id="bHow" style="font-weight:700"></p>
     <div class="actions"><button onclick="show('start')">Back</button><button class="primary" onclick="startGame()">Take the job</button></div>
   </div>
@@ -428,6 +402,7 @@ const CC=(()=>{
 })();
 
 /* ===== Countries ===== */
+// 'best' = best possible 20-year score (k per year, coordinate search) under FAST, R_GAME and these parameters; recompute if any of them change.
 const COUNTRIES=[
  {id:'placidia',name:'Placidia',diff:1,best:1888,tease:'A steady country. Your tastes stay put, and nobody learns your code.',chips:['steady taste','no learning'],P:{},
   how:"In Placidia nobody learns your code. Friends stick to their own kind, and the schools don't teach it."},
@@ -532,8 +507,7 @@ async function pick(i){
 
 /* ===== Game state ===== */
 let G=null, playing=false, rush=false;
-const SCR_ORDER=[7,2,13,18,0,11,5,16,9,3,14,19,6,1,12,17,8,4,15,10]; // which screens turn pink first
-const SEASONS=['Spring','Summer','Autumn','Winter'];
+let SCR_ORDER=[7,2,13,18,0,11,5,16,9,3,14,19,6,1,12,17,8,4,15,10]; // which screens turn pink first; reshuffled each game
 const STAGES=[['vDecide','Studio'],['vAir','On air'],['vPolls','Polls'],['vPay','Payday']];
 function makeStreet(rand,nA){ // 12 houses: nA of milieu A, rest teak; thresholds for literacy, offsets for marks
   const hs=[];const nC=12-nA;let cIdx=0;
@@ -552,7 +526,8 @@ function startGame(){
      streets:{W:makeStreet(rand,Math.round(12*P.alW)),E:makeStreet(rand,Math.max(Math.round(12*P.alE),P.alE>0?1:0))},
      dipped:false,dSal:0,dBon:0,year:null,headline:'New Director-General takes over the national broadcaster',ticker:['NEW DIRECTOR-GENERAL TAKES OVER THE NATIONAL BROADCASTER','SUPPORT FOR THE BROADCASTER AT 55% IN EAST AND WEST']};
   $('gCty').textContent=CUR.name;
-  buildWall('wall');buildWall('wall2');buildStreets();$('nA').textContent=G.k;$('nC').textContent=NSCR-G.k;paintWall('wall',false);renderTill();
+  SCR_ORDER=[...Array(NSCR).keys()].sort(()=>rand()-0.5);
+  buildWall('wall');buildWall('wall2');buildStreets();$('nA').textContent=G.k;$('nC').textContent=NSCR-G.k;paintWall('wall',false);turnKnobs();renderTill();
   goStage(0);show('game');
 }
 
@@ -567,10 +542,13 @@ function goStage(i){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function setNext(label,ready){
+  if(ready)readyAt=performance.now()+350;
   const b=$('next');b.textContent=ready?label:'Tap to finish ▸▸';b.classList.toggle('primary',ready);b.classList.toggle('waiting',!ready);
 }
+let readyAt=0;
 $('next').onclick=()=>{
-  if(playing){rush=true;return;}           // finish the running animation, stay on this stage
+  if(playing){rush=true;return;}
+  if(performance.now()<readyAt)return;           // finish the running animation, stay on this stage
   if(STAGE===0) broadcast();
   else if(STAGE===1) stagePolls();
   else if(STAGE===2) stagePay();
@@ -653,7 +631,7 @@ function tickerItems(Y){
   const out=[],P=Y.prevV,L=G.lastV,pt=x=>(100*x).toFixed(1)+'%';
   if(Y.news)out.push(Y.news.toUpperCase());
   if(G.ousted!==null)out.push(`THE BOARD'S OWN COUNT: ${pt(G.trueV.N)}. THE DIRECTOR-GENERAL IS OUT`);
-  for(const [k,name,th] of [['N','NATIONWIDE',0.003],['E','EAST',0.006],['W','WEST',0.006]]){
+  for(const [k,name,th] of [['N','NATIONWIDE',0.01],['E','EAST',0.015],['W','WEST',0.012]]){
     const d=L[k]-P[k];
     if(P[k]>=0.5&&L[k]<0.5)out.push(`${name}: SUPPORT DROPS BELOW HALF, NOW ${pt(L[k])}`);
     else if(P[k]<0.5&&L[k]>=0.5)out.push(`${name}: SUPPORT BACK ABOVE HALF, NOW ${pt(L[k])}`);
@@ -779,7 +757,7 @@ async function stagePay(){
   await countUp(Y.sal,Y.bon,800);
   if(rush){box.innerHTML='';G.dSal=G.sal;G.dBon=G.bon;renderTill();}
   playing=false;rush=false;
-  setNext(over()?(G.ousted!==null?'See what happened':'Forty years: see your record'):'Back to the studio',true);
+  setNext(over()?(G.ousted!==null?'See what happened':'Twenty years: see your record'):'Back to the studio',true);
 }
 function miniBurst(){let pts='';const N=10;for(let i=0;i<2*N;i++){const r=i%2?17:24,a=Math.PI*i/N;pts+=(29+r*Math.cos(a)).toFixed(1)+','+(25+r*Math.sin(a)*.85).toFixed(1)+' ';}
   return `<svg viewBox="0 0 58 50"><polygon points="${pts}" fill="#F4C0D1" stroke="#72243E" stroke-width="2"/></svg>`;}
@@ -805,7 +783,7 @@ function faceSVG(kind,mood){
 }
 function buildStreets(){
   for(const r of ['W','E']){
-    $('h'+r).innerHTML=G.streets[r].map((h,i)=>`<div class="house" id="h${r}${i}"><div class="shows"></div><div class="hbox">${baseSVG(h.kind)}<div class="glow"></div><div class="face"></div></div><div class="say">?</div><div class="reply"></div><div class="pips"></div><div class="marks"></div></div>`).join('');
+    $('h'+r).innerHTML=G.streets[r].map((h,i)=>`<div class="house" id="h${r}${i}"><div class="shows"></div><div class="hbox">${baseSVG(h.kind)}<div class="glow"></div><div class="face"></div></div><div class="marks"></div></div>`).join('');
     G.streets[r].forEach(h=>{h.M=0;h.lit=false;});
   }
 }
@@ -813,9 +791,6 @@ const HE=(r,i)=>$('h'+r+i);
 function setGlow(r,i,code){const g=HE(r,i).querySelector('.glow');g.className='glow'+(code?' '+code:'');}
 function setFace(r,i,mood){const h=G.streets[r][i],f=HE(r,i).querySelector('.face');
   if(!mood){f.classList.remove('on');return;} f.innerHTML=faceSVG(h.kind,mood);f.classList.remove('on');void f.offsetWidth;f.classList.add('on');}
-function setSay(r,i,st){const e=HE(r,i).querySelector('.say');e.className='say'+(st?' on':'')+(st==='red'?' red':'');}
-function setReply(r,i,st){const e=HE(r,i).querySelector('.reply');e.className='reply'+(st?' '+st:'');e.textContent=st==='ok'?'✓':st==='no'?'✗':'';}
-function setPips(r,i,n){HE(r,i).querySelector('.pips').innerHTML='<i></i>'.repeat(n);}
 function renderMarks(r,i,added,faded){
   const h=G.streets[r][i],box=HE(r,i).querySelector('.marks');
   const keep=Math.min(8,h.M);let html='';
@@ -877,7 +852,7 @@ async function stageAir(){
 function tileOf(r,i,D){
   const h=G.streets[r][i],code=D.codes[r][i]?'a':'c';
   let mark='got';
-  if(D.faces[r][i]==='frown') mark=(h.kind==='C'&&!h.lit&&D.says[r][i])?'nobody':'told';
+  if(D.faces[r][i]==='frown'&&h.kind==='C'&&!h.lit) mark=D.says[r][i]?'nobody':'told'; // readers of the code never need to ask
   return {code,mark};
 }
 function setTiles(r,i,tiles){
@@ -888,16 +863,6 @@ function setTiles(r,i,tiles){
 function clearTiles(){document.querySelectorAll('.house .shows').forEach(e=>{e.innerHTML='';e.classList.remove('on');});}
 function placeStreets(id){const box=$('streetsBox');if(box.parentNode.id!==id)$(id).appendChild(box);}
 
-/* ----- bursts ----- */
-function bursts(sal,bon,bd){
-  const box=$('bubbles');box.innerHTML='';box.style.setProperty('--bd',bd+'ms');
-  const spike=(fill,stroke)=>{let pts='';const N=14;for(let i=0;i<2*N;i++){const r=i%2?38:50,a=Math.PI*i/N;pts+=(55+r*Math.cos(a)).toFixed(1)+','+(55+r*Math.sin(a)*.8).toFixed(1)+' ';}
-    return `<svg width="110" height="100" viewBox="0 0 110 110"><polygon points="${pts}" fill="${fill}" stroke="${stroke}" stroke-width="3"/></svg>`;};
-  const mk=(x,y,fill,stroke,col,val,lab)=>{const d=document.createElement('div');d.className='burst';d.style.left=x+'%';d.style.top=y+'%';
-    d.innerHTML=spike(fill,stroke)+`<span style="color:${col}">+${fmt(val)}k<small>${lab}</small></span>`;box.appendChild(d);};
-  mk(30,48,'#FFF3C4','#2B2420','#2B2420',sal,'salary');
-  if(bon>0.5)mk(70,52,'#F4C0D1','#72243E','#72243E',bon,'bonus');
-}
 
 
 /* ===== End ===== */
@@ -920,7 +885,7 @@ function endGame(){
   const H=G.hist,P=G.P,y=G.ousted!==null?G.ousted+1:YEARS;
   $('eTitle').textContent=G.ousted!==null?`Out after ${y} year${y>1?'s':''}`:'Twenty years on air';
   const zero=R_GAME*(0.5+P.beta)*SCALE*YEARS; // what a director who never shows a pink screen earns
-  const score=Math.max(-100,Math.round(100*(G.score-zero)/(CUR.best-zero)));
+  const score=Math.max(-100,Math.round(100*(G.score-zero)/(CUR.best-zero)))||0;
   const LADDER=[[0,'no better than a test card','TEST CARD','#7A6E63','#fff'],[20,'a tad better than a test card','A TAD BETTER|THAN A TEST CARD','#C9BBA4','#2B2420'],
     [40,'a late-night filler','LATE-NIGHT|FILLER','#F1E4CC','#2B2420'],[55,'solid daytime television','SOLID DAYTIME|TELEVISION','#F4C0D1','#72243E'],[70,'prime time','PRIME TIME','#ED93B1','#4B1528'],
     [85,'quite a hit','QUITE A HIT','#D4537E','#fff'],[95,'the talk of the nation','THE TALK OF|THE NATION','#E8B931','#2B2420'],[101,'a classic','A CLASSIC','#FFD23F','#2B2420']];
