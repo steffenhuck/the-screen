@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Screen</title>
+<script data-goatcounter="https://steffenhuck.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<style>
+:root{
+  --cream:#F5EFE3; --paper:#FBF8F1; --ink:#2B2420; --muted:#7A6E63; --line:#D9CDBB;
+  --pink:#F4C0D1; --pink2:#D4537E; --pinkdk:#72243E;
+  --teak:#6B4226; --teak2:#8A5A36; --teakdk:#4A2C18; --teaklt:#F1E4CC;
+  --good:#3B7A4A; --bad:#B23A2E; --gold:#E8B931; --blue:#2B4C9A; --red:#C8372D;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--cream);color:var(--ink);font-family:"Avenir Next",Avenir,"Century Gothic","Futura","Helvetica Neue",Arial,sans-serif;}
+body{min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:16px 16px 40px}
+h1,h2,h3{font-weight:700;letter-spacing:.01em;margin:0}
+button{font:inherit;cursor:pointer;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:6px;padding:10px 14px;font-weight:700}
+button:active{transform:translateY(1px)}
+button.primary{background:var(--ink);color:var(--paper)}
+button.pinkbtn{background:var(--pink2);border-color:var(--pinkdk);color:#fff}
+button:disabled{opacity:.4;cursor:default}
+.hidden{display:none!important}
+footer{text-align:center;margin-top:36px}
+footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacing:.2em;font-size:13px}
+
+/* title */
+.mast{text-align:center;padding:18px 0 6px}
+.mast .logo{display:flex;justify-content:center;gap:6px;margin-bottom:10px}
+.mast h1{font-size:46px;letter-spacing:.04em}
+.mast p{color:var(--muted);margin:6px 0 0;font-size:15px}
+.intro{font-size:15px;line-height:1.55;margin:16px 0 18px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:12px;text-align:left;cursor:pointer;position:relative;min-height:132px;display:flex;flex-direction:column;gap:6px;font-weight:400}
+.card:hover{background:#fff}
+.card h3{font-size:18px}
+.card .tease{font-size:13px;line-height:1.35;color:var(--ink)}
+.card .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
+.chip{font-size:11px;padding:2px 6px;border-radius:10px;background:var(--cream);border:1px solid var(--line);color:var(--muted)}
+.dots{font-size:12px;letter-spacing:2px;color:var(--pink2)}
+.card.locked{cursor:default;border-color:var(--line);background:#EFE8DB}
+.card.locked h3,.card.locked .tease{color:#A69A8C}
+.card.locked .soon{position:absolute;top:10px;right:10px;font-size:10px;letter-spacing:.12em;color:#A69A8C;text-transform:uppercase}
+
+/* briefing */
+.brief{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:18px;margin-top:12px;line-height:1.6;font-size:15px}
+.brief h2{font-size:28px;margin-bottom:4px}
+.brief .codes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.brief .codes div{font-size:13px;text-align:center}
+
+/* game */
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.top .cty{font-weight:700;font-size:20px}
+.top .yr{font-size:13px;color:var(--muted)}
+.score{text-align:right}
+.score b{font-size:20px}
+.score small{display:block;color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.paperstrip{background:#fff;border:2px solid var(--ink);border-radius:4px;padding:6px 10px;margin:6px 0 10px;min-height:44px;font-family:Georgia,"Times New Roman",serif;position:relative;overflow:hidden}
+.paperstrip .mh{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);font-family:inherit}
+.paperstrip .hl{font-size:16px;font-weight:700;line-height:1.25}
+.paperstrip.flash{animation:flash .9s}
+@keyframes flash{0%{background:var(--gold)}100%{background:#fff}}
+
+.wallbox{position:relative;background:#2C2C2A;border-radius:10px;padding:8px}
+.wall{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.scr{background:#111;border-radius:4px;padding:2px;transition:transform .2s}
+.scr svg{display:block;width:100%;border-radius:2px}
+.scr.flick{animation:flick .28s}
+@keyframes flick{0%{filter:brightness(1.35)}100%{filter:none}}
+.scr.flip{animation:flip .35s}
+@keyframes flip{0%{transform:scaleY(.1)}100%{transform:scaleY(1)}}
+.bubbles{position:absolute;inset:0;pointer-events:none}
+.burst{position:absolute;transform:translate(-50%,-50%) scale(0);animation:burst var(--bd,3.4s) forwards;text-align:center}
+.burst svg{display:block}
+.burst span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:15px;line-height:1.05}
+.burst span small{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+@keyframes burst{0%{transform:translate(-50%,-50%) scale(0) rotate(-12deg)}8%{transform:translate(-50%,-50%) scale(1.18) rotate(3deg)}13%{transform:translate(-50%,-50%) scale(1) rotate(0)}72%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,40%) scale(.35)}}
+.till{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:0;margin-top:8px;background:var(--ink);color:var(--paper);border-radius:8px;overflow:hidden}
+.till div{padding:6px 10px;text-align:center}
+.till div+div{border-left:1px solid #4a403a}
+.till small{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#C9BBA4}
+.till b{font-size:18px;font-variant-numeric:tabular-nums}
+.till .tot b{font-size:22px;color:var(--gold)}
+.till b.bump{animation:bump .5s}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
+.till b{display:inline-block}
+
+.panel{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin:10px 0}
+.codebox{border:2px solid var(--ink);border-radius:8px;padding:6px;text-align:center;font-size:12px;font-weight:700}
+.codebox.a{background:var(--pink);color:var(--pinkdk);border-color:var(--pinkdk)}
+.codebox.c{background:var(--teak);color:var(--teaklt);border-color:var(--teakdk)}
+.codebox .n{font-size:24px;display:block;line-height:1.1}
+.codebox svg{width:54px;display:block;margin:2px auto}
+.steppers{display:flex;flex-direction:column;gap:6px}
+.steppers button{padding:6px 12px;font-size:18px;line-height:1}
+.actions{display:flex;gap:8px}
+.actions button{flex:1}
+
+.polls{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:10px 12px;margin-top:10px}
+.prow{display:grid;grid-template-columns:62px 1fr 64px;gap:8px;align-items:center;font-size:13px;margin:5px 0}
+.bar{position:relative;height:16px;background:#E9E0D0;border-radius:3px;overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--good);transition:width .8s,background .8s}
+.bar .half{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:var(--ink)}
+.pv{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.pv .d{font-size:10px;font-weight:700;margin-left:2px}
+.spark{display:block;width:100%;height:46px;margin-top:6px}
+
+.streets{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+.street{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:8px 10px}
+.street .lab{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px}
+.street .lab b{color:var(--ink);font-size:13px}
+.houses{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));column-gap:6px;row-gap:20px;padding-top:14px}
+.house{position:relative}
+.house .hbox{position:relative}
+.house svg.base{display:block;width:100%}
+.house .glow{position:absolute;left:10%;top:31.8%;width:80%;height:50%;opacity:0;transition:opacity .4s;pointer-events:none}
+.house .glow.a{background:rgba(212,83,126,.5);box-shadow:0 0 12px 4px rgba(212,83,126,.65);opacity:1}
+.house .glow.c{background:rgba(232,185,49,.42);box-shadow:0 0 12px 4px rgba(232,185,49,.6);opacity:1}
+.house .face{position:absolute;right:8%;top:22%;width:42%;transform:scale(0);transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
+.house .face svg{display:block;width:100%}
+.house .face.on{transform:scale(1)}
+.house .say{position:absolute;top:-14px;left:-5px;background:#fff;border:2px solid var(--ink);border-radius:10px;font-size:12px;font-weight:800;padding:0 5px;line-height:16px;transform:scale(0);transition:transform .3s cubic-bezier(.3,1.7,.5,1),background .3s,color .3s;z-index:2}
+.house .say.on{transform:scale(1)}
+.house .say.red{background:var(--bad);color:#fff;border-color:var(--bad)}
+.house .reply{position:absolute;top:-14px;right:-5px;width:22px;height:22px;border-radius:50%;font-size:14px;font-weight:900;display:flex;align-items:center;justify-content:center;color:#fff;transform:scale(0);transition:transform .3s cubic-bezier(.3,1.7,.5,1);z-index:2}
+.house .reply.ok{background:var(--good);transform:scale(1)}
+.house .reply.no{background:var(--bad);transform:scale(1)}
+.house.asking .hbox{outline:3px solid var(--ink);outline-offset:2px;border-radius:2px}
+.house.asked .hbox{outline:3px dashed var(--ink);outline-offset:2px;border-radius:2px}
+.house .pips{height:9px;display:flex;justify-content:center;gap:3px;margin-top:3px}
+.house .pips i{width:8px;height:8px;border-radius:50%;background:var(--bad);display:block;animation:pop .3s}
+.house .marks{height:10px;display:flex;justify-content:center;gap:1px;margin-top:1px}
+.house .marks b{width:4px;height:9px;background:var(--bad);border-radius:1px;display:block}
+.house .marks b.new{animation:thud .6s}
+.house .marks b.fade{animation:fadeout 1s forwards}
+.house.hurt .hbox{animation:hurt .6s}
+.house.learn .hbox{animation:learn 1.2s}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.4)}100%{transform:scale(1)}}
+@keyframes thud{0%{transform:translateY(-40px) scale(1.8);opacity:0}60%{transform:translateY(2px) scale(1.3);opacity:1}100%{transform:none}}
+@keyframes fadeout{0%{opacity:1}100%{opacity:0;transform:scaleY(.2)}}
+@keyframes hurt{0%,100%{transform:none}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}}
+@keyframes learn{0%{filter:none}40%{filter:drop-shadow(0 0 8px #D4537E)}100%{filter:none}}
+.caption{font-size:15px;line-height:1.45;margin:0 0 10px;min-height:66px;background:var(--paper);border-left:4px solid var(--ink);padding:8px 10px}
+.caption .pk{color:var(--pink2);font-weight:700}
+.caption .am{color:#B07D10;font-weight:700}
+
+.legend{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.4}
+
+.stagebar{display:flex;gap:4px;margin:2px 0 10px}
+.stagebar span{flex:1;font-size:10px;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:4px 0;border-bottom:3px solid var(--line);color:#A69A8C}
+.stagebar span.on{border-color:var(--ink);color:var(--ink);font-weight:700}
+.view{min-height:60vh}
+.nextbar{position:sticky;bottom:0;padding:10px 0 12px;background:linear-gradient(rgba(245,239,227,0),var(--cream) 30%);margin-top:12px;z-index:5}
+.nextbar button{width:100%;padding:16px;font-size:18px}
+.nextbar button.waiting{background:var(--paper);color:var(--muted);border-color:var(--line);font-weight:400;font-size:15px}
+.season{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 8px}
+.season b{font-size:24px}
+.season span{font-size:14px;color:var(--muted)}
+.mini{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:2px;margin-bottom:10px}
+.mini i{height:14px;border-radius:2px;display:block}
+.mini.flash i{animation:flick .4s}
+.paperstrip.big{padding:12px 14px;min-height:96px}
+.paperstrip.big .hl{font-size:22px}
+.paperstrip.quiet .hl{color:var(--muted);font-weight:400;font-style:italic}
+.payhead{font-size:24px;font-weight:700;margin-bottom:8px}
+.payhead small{display:block;font-size:13px;color:var(--muted);font-weight:400}
+.bigpolls .prow{grid-template-columns:62px 1fr 72px;font-size:15px;margin:12px 0}
+.bigpolls .bar{height:24px}
+.bigpolls .spark{height:90px}
+
+/* end */
+.endbox{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:16px;margin-top:8px}
+.endbox h2{font-size:30px;line-height:1.1}
+.verdict{font-size:15px;line-height:1.55;margin:10px 0}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+.stat{background:var(--cream);border-radius:6px;padding:8px}
+.stat small{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.stat b{font-size:20px}
+.charts{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
+.chart h4{margin:0 0 4px;font-size:13px}
+.chart canvas{width:100%;height:150px;display:block;background:#fff;border:1px solid var(--line);border-radius:4px}
+.ckey{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:3px}
+.ckey span::before{content:"";display:inline-block;width:14px;height:3px;margin-right:4px;vertical-align:middle;background:var(--c)}
+.reveal{background:var(--cream);border-radius:6px;padding:10px;font-size:14px;line-height:1.5;margin-top:12px}
+.reveal code{font-family:inherit;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- START -->
+<section id="start">
+  <div class="mast">
+    <div class="logo" id="logo"></div>
+    <h1>THE SCREEN</h1>
+    <p>You run the national broadcaster. Choose a country.</p>
+  </div>
+  <div class="grid" id="countries"></div>
+</section>
+
+<!-- BRIEF -->
+<section id="brief" class="hidden">
+  <div class="brief">
+    <h2 id="bTitle"></h2>
+    <div id="bTease" style="color:var(--muted);font-size:14px"></div>
+    <p>You run national television. Every year you decide how many of the twenty screens show <b>your code</b>: the look of your own milieu, shell chairs and lofts and primary-colour geometry. The rest show <b>the common code</b> that everybody understands: teak cabinets, sofas, family dinners.</p>
+    <div class="codes">
+      <div><div class="scr" style="background:#111"><svg viewBox="0 0 60 44" id="bA"></svg></div>your code</div>
+      <div><div class="scr" style="background:#111"><svg viewBox="0 0 60 44" id="bC"></svg></div>the common code</div>
+    </div>
+    <p>Your <b>salary</b> follows your approval. Your <b>bonus</b> comes from every pink screen. If approval drops below one half, you are out. You have forty years.</p>
+    <p style="color:var(--muted);font-size:14px">Watch the street.</p>
+    <div class="actions"><button onclick="show('start')">Back</button><button class="primary" onclick="startGame()">Take the job</button></div>
+  </div>
+</section>
+
+<!-- GAME -->
+<section id="game" class="hidden">
+  <div class="top">
+    <div><div class="cty" id="gCty"></div><div class="yr" id="gYear"></div></div>
+    <div class="score"><small>earned</small><b id="gScore">0</b></div>
+  </div>
+  <div class="stagebar" id="stagebar"></div>
+
+  <!-- 1 decide -->
+  <div class="view" id="vDecide">
+    <div class="paperstrip" id="stripD"><div class="mh">The Evening Standard-Bearer</div><div class="hl" id="hlD"></div></div>
+    <div class="wallbox"><div class="wall" id="wall"></div></div>
+    <div class="till"><div><small>salary so far</small><b id="tSal">0k</b></div><div><small>bonus so far</small><b id="tBon" style="color:var(--pink)">0k</b></div><div class="tot"><small>total</small><b id="tTot">0k</b></div></div>
+    <div class="panel">
+      <div class="codebox a"><svg viewBox="0 0 60 44" id="pA"></svg>your code<span class="n" id="nA">8</span></div>
+      <div class="steppers"><button id="plus" aria-label="More of your code">+</button><button id="minus" aria-label="Less of your code">−</button></div>
+      <div class="codebox c"><svg viewBox="0 0 60 44" id="pC"></svg>common code<span class="n" id="nC">12</span></div>
+    </div>
+    <div class="polls" id="pollsD"></div>
+  </div>
+
+  <!-- 2 on air -->
+  <div class="view hidden" id="vAir">
+    <div class="season" id="season"></div>
+    <div class="mini" id="mini"></div>
+    <div class="caption" id="caption"></div>
+    <div class="streets">
+      <div class="street"><div class="lab"><b>A street in the West</b><span>70% of viewers</span></div><div class="houses" id="hW"></div></div>
+      <div class="street"><div class="lab"><b>A street in the East</b><span>30% of viewers</span></div><div class="houses" id="hE"></div></div>
+    </div>
+    <div class="legend">Pink windows are your people. Red bars on a door are grudges not yet forgotten. A teak house with a pink chair has learned your code.</div>
+  </div>
+
+  <!-- 3 polls -->
+  <div class="view hidden" id="vPolls">
+    <div class="paperstrip big" id="stripP"><div class="mh">The Evening Standard-Bearer</div><div class="hl" id="hlP"></div></div>
+    <div class="polls" id="pollsP"></div>
+  </div>
+
+  <!-- 4 payday -->
+  <div class="view hidden" id="vPay">
+    <div class="payhead" id="payhead">Payday</div>
+    <div class="wallbox"><div class="wall" id="wall2"></div><div class="bubbles" id="bubbles"></div></div>
+    <div class="till"><div><small>salary so far</small><b id="tSal2">0k</b></div><div><small>bonus so far</small><b id="tBon2" style="color:var(--pink)">0k</b></div><div class="tot"><small>total</small><b id="tTot2">0k</b></div></div>
+  </div>
+
+  <div class="nextbar"><button class="primary" id="next">Broadcast the year</button></div>
+</section>
+
+<!-- END -->
+<section id="end" class="hidden">
+  <div class="endbox">
+    <h2 id="eTitle"></h2>
+    <div class="verdict" id="eVerdict"></div>
+    <div class="stats" id="eStats"></div>
+    <div class="charts">
+      <div class="chart"><h4>Share of your code on the screen</h4><canvas id="c1"></canvas><div class="ckey"><span style="--c:var(--pink2)">you</span><span style="--c:#888">Lena</span></div></div>
+      <div class="chart"><h4>Approval</h4><canvas id="c2"></canvas><div class="ckey"><span style="--c:var(--ink)">you</span><span style="--c:#888">Lena</span></div></div>
+      <div class="chart"><h4>Who could read your code (hidden during play)</h4><canvas id="c3"></canvas><div class="ckey"><span style="--c:var(--blue)">West</span><span style="--c:var(--red)">East</span></div></div>
+      <div class="chart"><h4>Unforgotten bad years per viewer who can't read your code (hidden)</h4><canvas id="c4"></canvas><div class="ckey"><span style="--c:var(--blue)">West</span><span style="--c:var(--red)">East</span></div></div>
+      <div class="chart"><h4>Your taste for your own code (hidden)</h4><canvas id="c5"></canvas><div class="ckey"><span style="--c:var(--pink2)">bonus per pink screen, relative to year 1</span></div></div>
+    </div>
+    <div class="reveal" id="eReveal"></div>
+    <div class="actions" style="margin-top:14px"><button onclick="show('start')">Other countries</button><button class="primary" onclick="startGame()">Play again</button></div>
+  </div>
+</section>
+
+<footer><a href="https://steffenhuck.github.io">steffen huck</a></footer>
+</div>
+
+<script>
+/* ===== Engine: exact port of dyn_v9.py (Closed Codes) ===== */
+const CC=(()=>{
+  const P0={lam:0.2,phi:0.9,n:1,m:2,rule:'all',kbar:2,muW:0.7,muE:0.3,alW:0.6,alE:0.05,omega:0.0,
+    beta:0.05,rho:0.012,eps:0.044,delta0:0.003,R:1.0,eta:0.0,zeta:0.03,kappa:0.0,s:0.0,theta:0.08,ell0:0.0,persist:false};
+  const REG=['W','E'];
+  function comb(n,k){let r=1;for(let i=1;i<=k;i++)r=r*(n-k+i)/i;return r;}
+  function pools(ell,P){
+    const mu={W:P.muW,E:P.muE},al={W:P.alW,E:P.alE},om=P.omega;let natIll=0,natKn=0;
+    for(const r of REG){natIll+=mu[r]*(1-al[r])*(1-ell[r]);natKn+=mu[r]*(al[r]+(1-al[r])*ell[r]);}
+    const nu={},kn={};
+    for(const r of REG){nu[r]=(1-om)*(1-al[r])*(1-ell[r])+om*natIll;kn[r]=(1-om)*(al[r]+(1-al[r])*ell[r])+om*natKn;}
+    return {mu,al,nu,kn};
+  }
+  function gEp(p,lam,phi,n,nu){const Fa=nu*phi+(1-nu)*lam;return p*phi*Math.pow(Fa,n)+(1-p)*Math.pow(lam,n+1);}
+  function seasonRate(g,P){const m=P.m;if(P.rule==='all')return Math.pow(g,m);let s=0;for(let j=P.kbar;j<=m;j++)s+=comb(m,j)*Math.pow(g,j)*Math.pow(1-g,m-j);return s;}
+  function golden(f,a,b){const gr=(Math.sqrt(5)-1)/2;let c=b-gr*(b-a),d=a+gr*(b-a),fc=f(c),fd=f(d);
+    for(let i=0;i<200&&b-a>1e-13;i++){if(fc<fd){b=d;d=c;fd=fc;c=b-gr*(b-a);fc=f(c);}else{a=c;c=d;fc=fd;d=a+gr*(b-a);fd=f(d);}}return (a+b)/2;}
+  function bestShare(delta,objV,P){const obj=p=>-(delta*p+P.R*objV(p));const cands=[0,1,golden(obj,0,1)];
+    if(P.rule!=='all'){const N=2000,xs=[],vals=[];for(let i=0;i<=N;i++){xs.push(i/N);vals.push(obj(i/N));}
+      for(let i=1;i<N;i++)if(vals[i]<vals[i-1]&&vals[i]<=vals[i+1])cands.push(golden(obj,xs[i-1],xs[i+1]));}
+    let best=cands[0];for(const c of cands)if(obj(c)<obj(best))best=c;return best;}
+  function step(state,P,piFixed=null){
+    const {lam,phi,n,theta:th}=P;const ell={W:state[0],E:state[1]},S={W:state[2],E:state[3]},h=state[4],delta=P.delta0+h;
+    const {mu,al,nu,kn}=pools(ell,P);let mA=0;for(const r of REG)mA+=mu[r]*al[r];
+    const a=(r,p)=>seasonRate(gEp(p,lam,phi,n,nu[r]),P);let Snext,V;
+    if(P.persist){Snext=(r,p)=>(1-th)*S[r]+(1-ell[r])*a(r,p);
+      V=p=>{let s=0;for(const r of REG)s+=mu[r]*(1-al[r])*Snext(r,p);return 0.5+P.beta+mA*P.rho*p-P.eps*s;};}
+    else{Snext=(r,p)=>(1-th)*S[r]+a(r,p);
+      V=p=>{let s=0;for(const r of REG)s+=mu[r]*(1-al[r])*(1-ell[r])*Snext(r,p);return 0.5+P.beta+mA*P.rho*p-P.eps*s;};}
+    const myopic=bestShare(delta,V,P);const pi=piFixed===null?myopic:piFixed;
+    const newell=REG.map(r=>ell[r]+(1-ell[r])*(P.kappa*pi*(1-Math.pow(1-kn[r],n))+P.s));
+    const next=[newell[0],newell[1],Snext('W',pi),Snext('E',pi),(1-P.zeta)*h+P.eta*pi];
+    const reg={};for(const r of REG){const w=P.persist?(1-al[r]):(1-al[r])*(1-ell[r]);
+      reg[r]=0.5+P.beta+al[r]*P.rho*pi-P.eps*w*Snext(r,pi);}
+    return {state:next,pi,V:V(pi),myopic,reg,psi:delta,nu,bad:{W:a('W',pi),E:a('E',pi)}};
+  }
+  function init(P){return [P.ell0,P.ell0,0,0,0];}
+  return {P0,step,init,pools};
+})();
+
+/* ===== Countries ===== */
+const COUNTRIES=[
+ {id:'placidia',name:'Placidia',on:true,diff:2,tease:'A steady country. Your tastes stay put, and nobody learns your code.',chips:['steady taste','no learning'],P:{}},
+ {id:'narcissia',name:'Narcissia',on:true,diff:3,tease:'The more of your code you show, the more you love it.',chips:['taste grows','no learning'],P:{eta:0.0004}},
+ {id:'spera',name:'Spera',on:false,diff:2,tease:'Neighbours teach each other your code. The East has few teachers.',chips:['neighbours teach'],P:{kappa:0.03}},
+ {id:'amoria',name:'Amoria',on:true,diff:4,tease:'You fall for your code, and neighbours pass it on.',chips:['taste grows','neighbours teach'],P:{eta:0.0004,kappa:0.03}},
+ {id:'semidocta',name:'Semidocta',on:false,diff:3,tease:'The schools teach your code. A little.',chips:['a little schooling'],P:{eta:0.0001,s:0.001}},
+ {id:'academia',name:'Academia',on:false,diff:1,tease:'The schools teach your code properly.',chips:['good schools'],P:{eta:0.0001,s:0.05}},
+ {id:'obstinata',name:'Obstinata',on:false,diff:2,tease:'None of your people live in the East.',chips:['no pink in the East','neighbours teach'],P:{eta:0.0001,kappa:0.03,alE:0}},
+ {id:'hermetica',name:'Hermetica',on:false,diff:5,tease:'To outsiders your code means nothing at all.',chips:['blank to outsiders','neighbours teach'],P:{eta:0.0001,kappa:0.03,phi:1.0}},
+ {id:'garrulia',name:'Garrulia',on:false,diff:3,tease:'East and West talk to each other.',chips:['East meets West','neighbours teach'],P:{eta:0.0001,kappa:0.03,omega:0.1}},
+ {id:'occidentia',name:'Occidentia',on:false,diff:1,tease:'The East is small.',chips:['small East','neighbours teach'],P:{eta:0.0001,kappa:0.03,muE:0.1,muW:0.9}},
+ {id:'bipartia',name:'Bipartia',on:false,diff:5,tease:'East and West are the same size.',chips:['big East','neighbours teach'],P:{eta:0.0001,kappa:0.03,muE:0.5,muW:0.5}},
+ {id:'lethe',name:'Lethe',on:false,diff:1,tease:'People forget their grudges quickly.',chips:['short grudges','neighbours teach'],P:{eta:0.0001,kappa:0.03,theta:0.2}},
+];
+const R_GAME=0.02, SCALE=10000, YEARS=40, SPY=1, NSCR=20;
+
+/* ===== Pictures ===== */
+const A_PIC='<rect width="60" height="44" fill="#F4C0D1"/><circle cx="12" cy="11" r="5" fill="#D4537E"/><path d="M22 14 Q30 30 44 16 L46 20 Q32 36 20 18 Z" fill="#72243E"/><rect x="30" y="27" width="2.5" height="11" fill="#72243E"/><path d="M24 38 L38 38" stroke="#72243E" stroke-width="2.5"/>';
+const C_PIC='<rect width="60" height="44" fill="#6B4226"/><rect x="10" y="7" width="40" height="31" fill="#4A2C18"/><rect x="12" y="9" width="11" height="27" fill="#8A5A36"/><rect x="37" y="9" width="11" height="27" fill="#8A5A36"/><rect x="25" y="14" width="10" height="9" fill="#F1E4CC"/><rect x="25" y="26" width="10" height="10" fill="#8A5A36"/>';
+
+
+/* ===== UI helpers ===== */
+const $=id=>document.getElementById(id);
+function show(id){for(const s of ['start','brief','game','end'])$(s).classList.toggle('hidden',s!==id);window.scrollTo(0,0);}
+function fmt(x){return Math.round(x).toLocaleString('en-GB');}
+function pct(v){return (100*v).toFixed(1)+'%';}
+function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+
+/* ===== Start screen ===== */
+$('logo').innerHTML=[A_PIC,C_PIC].map(p=>`<div class="scr" style="width:58px"><svg viewBox="0 0 60 44">${p}</svg></div>`).join('');
+$('countries').innerHTML=COUNTRIES.map((c,i)=>`<div class="card ${c.on?'':'locked'}" ${c.on?`onclick="pick(${i})"`:''}>
+  ${c.on?'':'<span class="soon">soon</span>'}<h3>${c.name}</h3><div class="dots">${'●'.repeat(c.diff)}${'○'.repeat(5-c.diff)}</div>
+  <div class="tease">${c.tease}</div><div class="chips">${c.chips.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`).join('');
+$('bA').innerHTML=A_PIC;$('bC').innerHTML=C_PIC;$('pA').innerHTML=A_PIC;$('pC').innerHTML=C_PIC;
+let CUR=null;
+function pick(i){CUR=COUNTRIES[i];$('bTitle').textContent=CUR.name;$('bTease').textContent=CUR.tease;show('brief');}
+
+/* ===== Game state ===== */
+let G=null, playing=false, rush=false;
+const SCR_ORDER=[7,2,13,18,0,11,5,16,9,3,14,19,6,1,12,17,8,4,15,10]; // which screens turn pink first
+const SEASONS=['Spring','Summer','Autumn','Winter'];
+const STAGES=[['vDecide','Studio'],['vAir','On air'],['vPolls','Polls'],['vPay','Payday']];
+function makeStreet(rand,nA){ // 12 houses: nA of milieu A, rest teak; thresholds for literacy, offsets for marks
+  const hs=[];const nC=12-nA;let cIdx=0;
+  const pos=[...Array(12).keys()].sort(()=>rand()-0.5).slice(0,nA);
+  const thr=[...Array(nC).keys()].map(j=>(j+0.5)/nC).sort(()=>rand()-0.5);
+  for(let i=0;i<12;i++){ if(pos.includes(i)) hs.push({kind:'A'}); else hs.push({kind:'C',thr:thr[cIdx++],off:rand()}); }
+  return hs;
+}
+function startGame(){
+  const P=Object.assign({},CC.P0,CUR.P);
+  const rand=rng(Date.now());
+  G={P,st:CC.init(P),t:0,k:8,score:0,sal:0,bon:0,ousted:null,rand,
+     hist:{pi:[],V:[],VW:[],VE:[],lW:[],lE:[],SW:[],SE:[],psi:[]},fired:new Set(),
+     shownV:{W:.55,E:.55,N:.55},lastV:{W:.55,E:.55,N:.55},
+     streets:{W:makeStreet(rand,Math.round(12*P.alW)),E:makeStreet(rand,Math.max(Math.round(12*P.alE),P.alE>0?1:0))},
+     dipped:false,dSal:0,dBon:0,year:null,headline:'New Director-General takes over the national broadcaster'};
+  $('gCty').textContent=CUR.name;
+  buildWall('wall');buildWall('wall2');buildStreets();$('nA').textContent=G.k;$('nC').textContent=NSCR-G.k;paintWall('wall',false);renderTill();
+  goStage(0);show('game');
+}
+
+/* ----- stage switching ----- */
+let STAGE=0;
+function goStage(i){
+  STAGE=i;
+  STAGES.forEach(([id],j)=>$(id).classList.toggle('hidden',j!==i));
+  $('stagebar').innerHTML=STAGES.map(([,lab],j)=>`<span class="${j===i?'on':''}">${lab}</span>`).join('');
+  updateTop();
+  if(i===0) enterDecide();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setNext(label,ready){
+  const b=$('next');b.textContent=ready?label:'Tap to finish ▸▸';b.classList.toggle('primary',ready);b.classList.toggle('waiting',!ready);
+}
+$('next').onclick=()=>{
+  if(playing){rush=true;return;}           // finish the running animation, stay on this stage
+  if(STAGE===0) broadcast();
+  else if(STAGE===1) stagePolls();
+  else if(STAGE===2) stagePay();
+  else if(STAGE===3){ if(over()) endGame(); else goStage(0); }
+};
+document.querySelector('#game').addEventListener('click',e=>{ if(playing && !e.target.closest('.nextbar')) rush=true; });
+function over(){return G.ousted!==null||G.t>=YEARS*SPY;}
+
+/* ----- waits that a tap can cut short ----- */
+function wait(ms){return new Promise(res=>{const t0=performance.now();const f=()=>{if(rush||performance.now()-t0>=ms)res();else requestAnimationFrame(f);};f();});}
+
+/* ----- studio ----- */
+function enterDecide(){
+  $('hlD').textContent=G.headline;
+  $('pollsD').innerHTML=pollsHTML('d',false);fillPolls('d',G.lastV,null,false);
+  paintWall('wall',false);renderTill();setNext('Broadcast the year',true);
+}
+function buildWall(id){ $(id).innerHTML=[...Array(NSCR).keys()].map(i=>`<div class="scr" data-i="${i}"><svg viewBox="0 0 60 44"></svg></div>`).join(''); }
+function pinkSet(k){return new Set(SCR_ORDER.slice(0,k));}
+function paintWall(id,anim){
+  const ps=pinkSet(G.k);
+  $(id).querySelectorAll('.scr').forEach((el,i)=>{const isA=ps.has(i);const want=isA?'a':'c';
+    if(el.dataset.code!==want){el.querySelector('svg').innerHTML=isA?A_PIC:C_PIC;el.dataset.code=want;
+      if(anim){el.classList.remove('flip');void el.offsetWidth;el.classList.add('flip');}}});
+}
+function renderCount(){$('nA').textContent=G.k;$('nC').textContent=NSCR-G.k;paintWall('wall',true);}
+$('plus').onclick=()=>{if(STAGE!==0||G.k>=NSCR)return;G.k++;renderCount();};
+$('minus').onclick=()=>{if(STAGE!==0||G.k<=0)return;G.k--;renderCount();};
+function updateTop(){const y=Math.min(YEARS,Math.floor((STAGE===0?G.t:G.t-1)/SPY)+1);$('gYear').textContent=`Year ${Math.max(1,y)} of ${YEARS}`;}
+function renderTill(){
+  const a=fmt(G.dSal)+'k',b=fmt(G.dBon)+'k',c=fmt(G.dSal+G.dBon)+'k';
+  $('tSal').textContent=a;$('tBon').textContent=b;$('tTot').textContent=c;
+  $('tSal2').textContent=a;$('tBon2').textContent=b;$('tTot2').textContent=c;$('gScore').textContent=c;
+}
+function countUp(dSal,dBon,ms){
+  const s0=G.dSal,b0=G.dBon,t0=performance.now();
+  for(const id of ['tSal2','tBon2','tTot2','gScore']){const e=$(id);e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump');}
+  return new Promise(res=>{const f=now=>{const u=rush?1:Math.min(1,(now-t0)/ms);G.dSal=s0+dSal*u;G.dBon=b0+dBon*u;renderTill();u<1?requestAnimationFrame(f):res();};requestAnimationFrame(f);});
+}
+
+/* ----- polls ----- */
+function pollsHTML(p,big){
+  return `<div class="${big?'bigpolls':''}"><div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Approval</div>
+  ${[['W','West'],['E','East'],['N','<b>Nation</b>']].map(([k,l])=>`<div class="prow"><span>${l}</span><div class="bar"><i id="${p}b${k}"></i><span class="half"></span></div><span class="pv" id="${p}v${k}"></span></div>`).join('')}
+  <canvas class="spark" id="${p}spark"></canvas></div>`;
+}
+function fillPolls(p,L,prev,arrows){
+  for(const k of ['W','E','N']){
+    const x=L[k];const w=Math.max(0,Math.min(1,(x-0.3)/0.4));
+    $(p+'b'+k).style.width=(100*w)+'%';$(p+'b'+k).style.background=x<0.5?'var(--bad)':(x<0.52?'#C98A2B':'var(--good)');
+    let d='';if(arrows&&prev){const dd=x-prev[k];if(Math.abs(dd)>0.0005)d=`<span class="d" style="color:${dd>0?'var(--good)':'var(--bad)'}">${dd>0?'▲':'▼'}</span>`;}
+    $(p+'v'+k).innerHTML=pct(x)+d;
+  }
+  drawSpark(p+'spark',G.hist.V.length);
+}
+function drawSpark(id,upto){
+  const c=$(id),dpr=window.devicePixelRatio||1,W=c.clientWidth,H=c.clientHeight;if(!W)return;c.width=W*dpr;c.height=H*dpr;
+  const x=c.getContext('2d');x.scale(dpr,dpr);x.clearRect(0,0,W,H);
+  const lo=0.42,hi=0.58,T=YEARS*SPY,Y=v=>H-(v-lo)/(hi-lo)*H;
+  x.strokeStyle='#2B2420';x.setLineDash([3,3]);x.lineWidth=1;x.beginPath();x.moveTo(0,Y(.5));x.lineTo(W,Y(.5));x.stroke();x.setLineDash([]);
+  x.fillStyle='#7A6E63';x.font='10px sans-serif';x.fillText('50%',2,Y(.5)-3);
+  const V=G.hist.V.slice(0,upto);if(!V.length)return;x.strokeStyle='#2B2420';x.lineWidth=1.8;x.beginPath();
+  V.forEach((v,i)=>{const px=i/(T-1)*W,py=Y(Math.max(lo,Math.min(hi,v)));i?x.lineTo(px,py):x.moveTo(px,py);});x.stroke();
+}
+
+/* ----- headlines ----- */
+function checkHeadlines(){ // returns text or null; each fires once
+  const P=G.P,f=G.fired,ell={W:G.st[0],E:G.st[1]},L=G.lastV,psi=P.delta0+G.st[4];
+  const cands=[
+    ['ousted',G.ousted!==null,'Board dismisses Director-General. “We had no choice,” says chair'],
+    ['natslip',L.N<0.53,'Ratings slip. Insiders blame “all the pink stuff”'],
+    ['eastsour',L.E<0.5,'Viewers in the East say the channel is “not for us”'],
+    ['eastbad',L.E<0.45,'Sacks of letters from the East: “Who are these people?”'],
+    ['nervous',L.N<0.51,'Board grows nervous. Director-General “not worried”'],
+    ['westsour',L.W<0.5,'Even the West is grumbling now'],
+    ['taste2',psi>=2*P.delta0,'Director-General seen watching own channel late at night'],
+    ['taste4',psi>=4*P.delta0,'Canteen refitted in pink. Staff told it is “just better”'],
+    ['litW25',ell.W>0.25,'Shell-chair sales up in the West. Nobody saw it coming'],
+    ['litW60',ell.W>0.6,'Western furniture stores sell out of chairs. Teak “impossible to shift”'],
+    ['litE10',ell.E>0.1,'Eastern teenagers start getting the jokes'],
+    ['litE50',ell.E>0.5,'Half the East now reads the pink screens'],
+    ['allpink',G.k===NSCR,'Not one wall cabinet on screen this year'],
+    ['nopink',G.k===0&&G.t>=SPY*3,'Critics call it “the most beige channel in the world”'],
+    ['recover',G.dipped&&L.N>0.52,'Approval recovers. Commentators cannot explain it'],
+  ];
+  for(const [id,cond,txt] of cands){ if(!f.has(id)&&cond){f.add(id);return txt;} }
+  return null;
+}
+
+/* ----- the year: compute first, then show it in stages ----- */
+function broadcast(){
+  const pi=G.k/NSCR,P=G.P,lam=P.lam,phi=P.phi;
+  const Y={pi,seasons:[],sal:0,bon:0,prevV:Object.assign({},G.lastV)};
+  for(let s=0;s<SPY && !over();s++){
+    const before=G.st.slice(),o=CC.step(G.st,P,pi);
+    const ell={W:before[0],E:before[1]},nu=o.nu;
+    const sundays=[],bad={W:[],E:[]};
+    for(let sun=0;sun<P.m;sun++){
+      const faces={W:[],E:[]},says={W:[],E:[]},codes={W:[],E:[]};
+      for(const r of ['W','E']) G.streets[r].forEach((h,i)=>{
+        const lit=h.kind==='A'||ell[r]>h.thr, codeA=G.rand()<pi;
+        const missed=G.rand()<(codeA&&!lit?phi:lam);
+        faces[r][i]=missed?'frown':'smile';codes[r][i]=codeA;
+        let badMon=false;
+        if(missed&&h.kind==='C'&&!lit){const Fr=codeA?(nu[r]*phi+(1-nu[r])*lam):lam;badMon=G.rand()<Fr;}
+        says[r][i]=badMon;bad[r][i]=(bad[r][i]||0)+(badMon?1:0);
+      });
+      sundays.push({faces,says,codes});
+    }
+    G.st=o.state;G.t++;
+    const sal=R_GAME*o.V*SCALE,bon=o.psi*pi*SCALE;
+    G.score+=sal+bon;G.sal+=sal;G.bon+=bon;Y.sal+=sal;Y.bon+=bon;
+    const H=G.hist;H.pi.push(pi);H.V.push(o.V);H.VW.push(o.reg.W);H.VE.push(o.reg.E);H.lW.push(G.st[0]);H.lE.push(G.st[1]);H.SW.push(G.st[2]);H.SE.push(G.st[3]);H.psi.push(o.psi);
+    G.lastV={W:o.reg.W,E:o.reg.E,N:o.V};
+    if(o.V<0.51)G.dipped=true;
+    Y.seasons.push({before,after:G.st.slice(),sundays,bad,V:o.V});
+    if(o.V<0.5)G.ousted=G.t-1;
+  }
+  Y.news=checkHeadlines();
+  if(Y.news)G.headline=Y.news;
+  G.year=Y;
+  stageAir();
+}
+
+async function stagePolls(){
+  goStage(2);playing=true;rush=false;setNext('',false);
+  const Y=G.year;
+  $('pollsP').innerHTML=pollsHTML('p',true);
+  // show last year's numbers first, then move to this year's
+  const nBefore=G.hist.V.length-Y.seasons.length;
+  fillPolls('p',Y.prevV,null,false);drawSpark('pspark',nBefore);
+  const strip=$('stripP');
+  if(Y.news){strip.classList.remove('quiet');$('hlP').textContent='…';}
+  else{strip.classList.add('quiet');$('hlP').textContent='No news from the broadcaster this year.';}
+  await wait(700);
+  fillPolls('p',G.lastV,Y.prevV,true);
+  // sweep the approval line forward season by season
+  for(let k=nBefore+1;k<=G.hist.V.length;k++){drawSpark('pspark',k);await wait(600);}
+  drawSpark('pspark',G.hist.V.length);
+  if(Y.news){await wait(500);$('hlP').textContent=Y.news;strip.classList.remove('flash');void strip.offsetWidth;strip.classList.add('flash');}
+  await wait(600);
+  playing=false;rush=false;setNext('Payday',true);
+}
+
+async function stagePay(){
+  goStage(3);playing=true;rush=false;setNext('',false);
+  const Y=G.year;
+  paintWall('wall2',false);$('bubbles').innerHTML='';
+  $('payhead').innerHTML=G.ousted!==null?'Final payday<small>Your last year in the job.</small>':`Payday<small>${G.k} of ${NSCR} screens showed your code this year.</small>`;
+  await wait(500);
+  bursts(Y.sal,Y.bon,3600);
+  await wait(3600*0.72);
+  await countUp(Y.sal,Y.bon,700);
+  if(rush){$('bubbles').innerHTML='';G.dSal=G.sal;G.dBon=G.bon;renderTill();}
+  playing=false;rush=false;
+  setNext(over()?(G.ousted!==null?'See what happened':'Forty years: see your record'):'Back to the studio',true);
+}
+
+/* ----- streets: persistent houses, animated step by step ----- */
+function baseSVG(kind){
+  const wall=kind==='A'?'#F4C0D1':'#8A5A36';
+  const inside=kind==='A'
+    ?'<path d="M6 20 Q11 30 19 21 L20 23 Q12 33 5 22 Z" fill="#72243E"/><rect x="11" y="27" width="1.6" height="6" fill="#72243E"/>'
+    :'<rect x="4" y="12" width="15" height="21" fill="#4A2C18"/><rect x="8" y="16" width="7" height="6" fill="#F1E4CC"/><g class="litchair" style="display:none"><path d="M5 26 Q9 32 14 27 L15 29 Q9 35 4 28 Z" fill="#D4537E"/></g>';
+  return `<svg class="base" viewBox="0 0 40 44"><path d="M2 12 L20 2 L38 12 Z" fill="#2B2420"/><rect x="2" y="12" width="36" height="30" fill="#E9E0D0" stroke="#2B2420" stroke-width="1.5"/><rect x="4" y="14" width="32" height="22" fill="${wall}"/>${inside}<rect x="4" y="36" width="32" height="4" fill="#C9BBA4"/></svg>`;
+}
+function faceSVG(kind,mood){
+  const skin=kind==='A'?'#fff':'#F1E4CC';
+  const mouth=mood==='smile'?'<path d="M4 8.5 Q7 11.5 10 8.5" fill="none" stroke="#2B2420" stroke-width="1.2"/>':'<path d="M4 10.5 Q7 7.8 10 10.5" fill="none" stroke="#2B2420" stroke-width="1.2"/>';
+  return `<svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="${skin}" stroke="#2B2420" stroke-width="1"/><circle cx="5" cy="5.5" r=".9" fill="#2B2420"/><circle cx="9" cy="5.5" r=".9" fill="#2B2420"/>${mouth}</svg>`;
+}
+function buildStreets(){
+  for(const r of ['W','E']){
+    $('h'+r).innerHTML=G.streets[r].map((h,i)=>`<div class="house" id="h${r}${i}"><div class="hbox">${baseSVG(h.kind)}<div class="glow"></div><div class="face"></div></div><div class="say">?</div><div class="reply"></div><div class="pips"></div><div class="marks"></div></div>`).join('');
+    G.streets[r].forEach(h=>{h.M=0;h.lit=false;});
+  }
+}
+const HE=(r,i)=>$('h'+r+i);
+function setGlow(r,i,code){const g=HE(r,i).querySelector('.glow');g.className='glow'+(code?' '+code:'');}
+function setFace(r,i,mood){const h=G.streets[r][i],f=HE(r,i).querySelector('.face');
+  if(!mood){f.classList.remove('on');return;} f.innerHTML=faceSVG(h.kind,mood);f.classList.remove('on');void f.offsetWidth;f.classList.add('on');}
+function setSay(r,i,st){const e=HE(r,i).querySelector('.say');e.className='say'+(st?' on':'')+(st==='red'?' red':'');}
+function setReply(r,i,st){const e=HE(r,i).querySelector('.reply');e.className='reply'+(st?' '+st:'');e.textContent=st==='ok'?'✓':st==='no'?'✗':'';}
+function setPips(r,i,n){HE(r,i).querySelector('.pips').innerHTML='<i></i>'.repeat(n);}
+function renderMarks(r,i,added,faded){
+  const h=G.streets[r][i],box=HE(r,i).querySelector('.marks');
+  const keep=Math.min(8,h.M);let html='';
+  for(let k=0;k<Math.min(8,keep+faded);k++){
+    if(k>=keep) html+='<b class="fade"></b>'; else if(k>=keep-added) html+='<b class="new"></b>'; else html+='<b></b>';
+  }
+  box.innerHTML=html;
+}
+function syncLit(st,anim){
+  for(const r of ['W','E']){const ell=st[r==='W'?0:1];
+    G.streets[r].forEach((h,i)=>{if(h.kind!=='C')return;const now=ell>h.thr;
+      if(now&&!h.lit){h.lit=true;const el=HE(r,i);el.querySelector('.litchair').style.display='';
+        const faded=h.M;h.M=0;renderMarks(r,i,0,faded); // grievances lapse with illiteracy
+        if(anim){el.classList.remove('learn');void el.offsetWidth;el.classList.add('learn');}}});}
+}
+function caption(t){$('caption').innerHTML=t;}
+
+async function stageAir(){
+  goStage(1);playing=true;rush=false;setNext('',false);
+  const Y=G.year,ps=pinkSet(G.k),m=G.P.m;
+  $('mini').innerHTML=[...Array(NSCR).keys()].map(i=>`<i style="background:${ps.has(i)?'#F4C0D1':'#6B4226'}"></i>`).join('');
+  const all=[];for(let i=0;i<12;i++)for(const r of ['W','E'])all.push([r,i]);
+  const clearAll=()=>all.forEach(([r,i])=>{setGlow(r,i,null);setFace(r,i,null);setSay(r,i,null);setReply(r,i,null);setPips(r,i,0);});
+  for(let s=0;s<Y.seasons.length;s++){
+    const S=Y.seasons[s],full=true,yr=G.t-Y.seasons.length+s+1,SN='This year';
+    const sub=t=>{$('season').innerHTML=`<b>Year ${yr}</b><span>${t}</span>`;};
+    const T=full?{glow:1000,hold:700,face:90,faces:1600,ask:1700,ans:2400,res:900,grudge:2400}
+               :{glow:280,hold:150,face:15,faces:450,ask:550,ans:800,res:300,grudge:1100};
+    // season summary per household, from the episode-by-episode draws
+    const missed={W:[],E:[]},bad={W:[],E:[]};
+    for(const [r,i] of all){missed[r][i]=S.sundays.some(D=>D.faces[r][i]==='frown');bad[r][i]=S.sundays.every(D=>D.says[r][i]);}
+    const askers=all.filter(([r,i])=>{const h=G.streets[r][i];return h.kind==='C'&&!h.lit&&missed[r][i];});
+    clearAll();
+    // 1 on air
+    sub('On air');
+    caption(full?`<b>On air.</b> Each household watches its episodes. <span class="pk">Pink light</span>: your code. <span class="am">Warm light</span>: the common code.`:`<b>${SN}.</b> On air.`);
+    for(const D of S.sundays){
+      const mm=$('mini');mm.classList.remove('flash');void mm.offsetWidth;mm.classList.add('flash');
+      all.forEach(([r,i])=>setGlow(r,i,D.codes[r][i]?'a':'c'));await wait(T.glow);
+    }
+    await wait(T.hold);
+    all.forEach(([r,i])=>setGlow(r,i,null));
+    // 2 who missed something
+    sub('Who missed something?');
+    caption(full?'<b>Who missed something?</b> A frown: this household didn’t get at least one episode.':`<b>${SN}.</b> Who missed something?`);
+    for(let i=0;i<12;i++){for(const r of ['W','E'])setFace(r,i,missed[r][i]?'frown':'smile');await wait(T.face);}
+    await wait(T.faces);
+    // 3 they ask
+    sub('They ask');
+    caption(full?'<b>They ask around.</b> Those who missed something and can’t read your code ask people who watched: <i>did you get it?</i>':`<b>${SN}.</b> They ask.`);
+    if(full&&!askers.length) caption('<b>They ask around.</b> Nobody here missed anything they couldn’t read. A good year.');
+    askers.forEach(([r,i])=>setSay(r,i,'ask'));
+    await wait(T.ask);
+    // 4 the answers
+    sub('The answers');
+    caption(full?'<b>The answers.</b> <span style="color:var(--good);font-weight:700">✓</span> someone had got it at least once: just bad luck. <span style="color:var(--bad);font-weight:700">✗</span> every time, nobody had: “that wasn’t meant for us.”':`<b>${SN}.</b> The answers.`);
+    askers.forEach(([r,i])=>setReply(r,i,bad[r][i]?'no':'ok'));
+    await wait(T.ans);
+    askers.forEach(([r,i])=>{if(bad[r][i])setSay(r,i,'red');else{setSay(r,i,null);setReply(r,i,null);}});
+    await wait(T.res);
+    // 5 grudges land, old ones fade
+    sub('Grudges');
+    let nNew=0,nGone=0;
+    for(const [r,i] of all){const h=G.streets[r][i];setSay(r,i,null);setReply(r,i,null);
+      if(h.kind!=='C'||h.lit)continue;
+      let gone=0;for(let k=0;k<h.M;k++)if(G.rand()<G.P.theta)gone++;
+      const add=bad[r][i]?1:0;h.M=h.M-gone+add;nNew+=add;nGone+=gone;
+      renderMarks(r,i,add,gone);
+      if(add){const el=HE(r,i);el.classList.remove('hurt');void el.offsetWidth;el.classList.add('hurt');}
+    }
+    caption(full?`<b>Grudges.</b> Every ✗ goes on the door${nNew?`: ${nNew} new this year`:''}. Old grudges slowly fade${nGone?`: ${nGone} forgotten`:''}.`
+                :`<b>${SN}.</b> ${nNew} new grudge${nNew===1?'':'s'}, ${nGone} forgotten.`);
+    await wait(T.grudge);
+    all.forEach(([r,i])=>setFace(r,i,null));
+    syncLit(S.after,true);
+  }
+  $('season').innerHTML=`<b>Year ${G.t}</b><span>Over</span>`;
+  caption('<b>The year is over.</b> Now the polls.');
+  playing=false;rush=false;setNext('See the polls',true);
+}
+
+/* ----- bursts ----- */
+function bursts(sal,bon,bd){
+  const box=$('bubbles');box.innerHTML='';box.style.setProperty('--bd',bd+'ms');
+  const spike=(fill,stroke)=>{let pts='';const N=14;for(let i=0;i<2*N;i++){const r=i%2?38:50,a=Math.PI*i/N;pts+=(55+r*Math.cos(a)).toFixed(1)+','+(55+r*Math.sin(a)*.8).toFixed(1)+' ';}
+    return `<svg width="110" height="100" viewBox="0 0 110 110"><polygon points="${pts}" fill="${fill}" stroke="${stroke}" stroke-width="3"/></svg>`;};
+  const mk=(x,y,fill,stroke,col,val,lab)=>{const d=document.createElement('div');d.className='burst';d.style.left=x+'%';d.style.top=y+'%';
+    d.innerHTML=spike(fill,stroke)+`<span style="color:${col}">+${fmt(val)}k<small>${lab}</small></span>`;box.appendChild(d);};
+  mk(30,48,'#FFF3C4','#2B2420','#2B2420',sal,'salary');
+  if(bon>0.5)mk(70,52,'#F4C0D1','#72243E','#72243E',bon,'bonus');
+}
+
+
+/* ===== Ghost Lena & benchmarks ===== */
+function ghost(P,policy){ // season by season, game scoring, job ends at ousting
+  let st=CC.init(P),score=0,out=null;const pi=[],V=[];
+  for(let t=0;t<YEARS*SPY;t++){const o=policy==='lena'?CC.step(st,P):CC.step(st,P,policy);
+    score+=(R_GAME*o.V+o.psi*o.pi)*SCALE;pi.push(o.pi);V.push(o.V);st=o.state;if(o.V<0.5){out=t;break;}}
+  return {score,out,pi,V};
+}
+
+/* ===== End ===== */
+function endGame(){
+  show('end');
+  const H=G.hist,y=Math.floor((G.ousted!==null?G.ousted:G.t-1)/SPY)+1;
+  const lena=ghost(G.P,'lena'),abst=ghost(G.P,0);
+  if(G.ousted!==null){$('eTitle').textContent=`Out after ${y} year${y>1?'s':''}`;}
+  else $('eTitle').textContent='Forty years on air';
+  const lenaTxt=lena.out!==null?`Lena, who each year chose what looked best that year, lost her majority in year ${Math.floor(lena.out/SPY)+1} and earned ${fmt(lena.score)}k.`
+    :`Lena, who each year chose what looked best that year, survived all forty years and earned ${fmt(lena.score)}k.`;
+  const cmp=G.score>lena.score?'You beat her.':'She beat you.';
+  $('eVerdict').innerHTML=`${G.ousted!==null?`Approval fell below one half in year ${y}. `:''}${lenaTxt} ${cmp} A director who never showed a single pink screen would have earned ${fmt(abst.score)}k.`;
+  $('eStats').innerHTML=[['earned',fmt(G.score)+'k'],['of which bonus',fmt(G.bon)+'k'],['lowest approval',pct(Math.min(...H.V))],['Lena earned',fmt(lena.score)+'k']]
+    .map(([a,b])=>`<div class="stat"><small>${a}</small><b>${b}</b></div>`).join('');
+  const T=YEARS*SPY;
+  const P100=v=>(v*100).toFixed(0)+'%';
+  lineChart('c1',[{d:H.pi,c:'#D4537E'},{d:lena.pi,c:'#888',dash:true}],0,1,null,T,P100);
+  const lo=Math.min(0.42,...H.V,...lena.V)-0.005;
+  lineChart('c2',[{d:H.V,c:'#2B2420'},{d:lena.V,c:'#888',dash:true}],lo,0.58,0.5,T,P100);
+  lineChart('c3',[{d:H.lW,c:'#2B4C9A'},{d:H.lE,c:'#C8372D'}],0,1,null,T,P100);
+  const smax=Math.max(1,...H.SW,...H.SE)*1.1;
+  lineChart('c4',[{d:H.SW,c:'#2B4C9A'},{d:H.SE,c:'#C8372D'}],0,smax,null,T,v=>v.toFixed(1));
+  const pmax=Math.max(...H.psi)*1.2,P0d=G.P.delta0;
+  lineChart('c5',[{d:H.psi.map(v=>v/P0d),c:'#D4537E'}],0,Math.max(2,pmax/P0d),null,T,v=>'×'+v.toFixed(1));
+  const P=G.P,traits=[];
+  traits.push(P.eta>0?`your taste grew with use (η = ${P.eta})`:`your taste did not grow (η = 0)`);
+  traits.push(P.kappa>0?`neighbours taught each other your code (κ = ${P.kappa})`:`nobody learned your code from neighbours (κ = 0)`);
+  if(P.s>0)traits.push(`the schools taught it (s = ${P.s})`);
+  $('eReveal').innerHTML=`<b>${CUR.name}</b>: ${traits.join('; ')}. Everything else is the calibration of <i>Closed Codes</i>, Section 4.4. Your salary weighs approval at R = ${R_GAME}; the paper's Lena weighs it at R = 1.`;
+}
+function lineChart(id,series,lo,hi,hline,T,lab){
+  const c=$(id),dpr=window.devicePixelRatio||1,W=c.clientWidth,Hh=c.clientHeight;c.width=W*dpr;c.height=Hh*dpr;
+  const x=c.getContext('2d');x.scale(dpr,dpr);const pad=6,Y=v=>pad+(Hh-2*pad)*(1-(v-lo)/(hi-lo)),X=i=>pad+(W-2*pad)*i/(T-1);
+  x.strokeStyle='#EEE6D8';x.lineWidth=1;for(let k=0;k<=4;k++){const yy=pad+(Hh-2*pad)*k/4;x.beginPath();x.moveTo(pad,yy);x.lineTo(W-pad,yy);x.stroke();}
+  if(hline!==null){x.strokeStyle='#2B2420';x.setLineDash([4,3]);x.beginPath();x.moveTo(pad,Y(hline));x.lineTo(W-pad,Y(hline));x.stroke();x.setLineDash([]);}
+  for(const s of series){x.strokeStyle=s.c;x.lineWidth=2;x.setLineDash(s.dash?[5,3]:[]);x.beginPath();
+    s.d.forEach((v,i)=>{const px=X(i),py=Y(Math.max(lo,Math.min(hi,v)));i?x.lineTo(px,py):x.moveTo(px,py);});x.stroke();}
+  x.setLineDash([]);x.fillStyle='#7A6E63';x.font='10px sans-serif';x.fillText(lab(hi),pad+2,pad+9);x.fillText(lab(lo),pad+2,Hh-pad-2);
+}
+</script>
+</body>
+</html>
