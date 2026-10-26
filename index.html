@@ -49,8 +49,6 @@ footer a{font-style:italic;color:var(--muted);text-decoration:none;letter-spacin
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .card{background:var(--paper);border:2px solid var(--ink);border-radius:8px;padding:12px;text-align:left;cursor:pointer;position:relative;min-height:132px;display:flex;flex-direction:column;gap:6px;font-weight:400}
 .card:hover{background:#fff}
-.card.coda{grid-column:1/-1;min-height:0;background:#F1E4CC}
-.card.coda .tease{max-width:420px}
 .card h3{font-size:18px}
 .card .tease{font-size:13px;line-height:1.35;color:var(--ink)}
 .card .chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
@@ -408,8 +406,6 @@ const CC=(()=>{
 const COUNTRIES=[
  {id:'placidia',name:'Placidia',diff:1,best:1888,tease:'A steady country. Your tastes stay put, and nobody learns your code.',chips:['steady taste','no learning'],P:{},
   how:"In Placidia nobody learns your code. Friends stick to their own kind, and the schools don't teach it."},
- {id:'semidocta',name:'Semidocta',diff:2,best:2214,tease:'The schools teach your code. A little.',chips:['a little schooling'],P:{eta:0.0001,s:0.001},
-  how:"In Semidocta the schools teach your code, a little. Friends stick to their own kind. And the more of your code you show, the more you love it, a little."},
  {id:'narcissia',name:'Narcissia',diff:3,best:4173,tease:'The more of your code you show, the more you love it.',chips:['taste grows','no learning'],P:{eta:0.0008},
   how:"In Narcissia nobody learns your code. Friends stick to their own kind, and the schools don't teach it. And the more of your code you show, the more you love it."},
  {id:'amoria',name:'Amoria',diff:3,best:4878,tease:'You fall for your code, and friends pass it on.',chips:['taste grows','friends teach'],P:{eta:0.0008,kappa:0.03},
@@ -418,7 +414,7 @@ const COUNTRIES=[
   how:"In Hermetica your code means nothing to anyone who can't read it: they miss every show in it. Some learn it from friends; the schools don't teach it."},
  {id:'bipartia',name:'Bipartia',diff:5,best:1969,tease:'East and West are the same size.',chips:['big East','friends teach'],P:{eta:0.0001,kappa:0.03,muE:0.5,muW:0.5},
   how:"In Bipartia East and West are the same size, and your own people live mostly in the West. Some learn your code from friends; the schools don't teach it."},
- {id:'academia',name:'Academia',diff:1,best:2770,coda:true,tease:'The country with good schools. They teach your code to everyone, East and West. Give them time.',chips:['good schools','friends teach'],P:{eta:0.0001,kappa:0.03,s:0.01},
+ {id:'academia',name:'Academia',diff:1,best:2770,tease:'The schools teach your code to everyone, East and West. Give them time.',chips:['good schools','friends teach'],P:{eta:0.0001,kappa:0.03,s:0.01},
   how:"In Academia the schools teach your code, in the East as in the West, and friends pass it on. It takes a while. Those who haven't learned it yet hold grudges like anyone else."},
 ];
 const R_GAME=0.01, SCALE=10000, YEARS=20, SPY=1, NSCR=20;
@@ -492,7 +488,7 @@ async function tune(label,ms,ids={card:'card',snow:'snow'}){
   if(!REDUCED){card.classList.remove('roll');void card.offsetWidth;card.classList.add('roll');}
 }
 tune('THE SCREEN',1500);
-$('countries').innerHTML=COUNTRIES.map((c,i)=>`<div class="card${c.coda?' coda':''}" onclick="pick(${i})">
+$('countries').innerHTML=COUNTRIES.map((c,i)=>`<div class="card" onclick="pick(${i})">
   <h3>${c.name}</h3><div class="dots">${'●'.repeat(c.diff)}${'○'.repeat(5-c.diff)}</div>
   <div class="tease">${c.tease}</div><div class="chips">${c.chips.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`).join('');
 $('bA').innerHTML=A_PIC;$('bC').innerHTML=C_PIC;$('pA').innerHTML=A_PIC;$('pC').innerHTML=C_PIC;
