@@ -882,7 +882,7 @@ function endGame(){
   $('eTitle').textContent=G.ousted!==null?`Out after ${y} year${y>1?'s':''}`:'Twenty years on air';
   const zero=R_GAME*(0.5+P.beta)*SCALE*YEARS; // what a director who never shows a pink screen earns
   const score=Math.max(-100,Math.round(100*(G.score-zero)/(CUR.best-zero)));
-  const grade=score<0?['Cancelled','#E0661B','#fff']:score<40?['Late-night slot','#F1E4CC','#2B2420']:score<70?['Prime time','#F4C0D1','#72243E']:score<90?['Hit show','#D4537E','#fff']:['A classic','#FFD23F','#2B2420'];
+  const grade=score<0?['Test card','#7A6E63','#fff']:score<40?['Late-night slot','#F1E4CC','#2B2420']:score<70?['Prime time','#F4C0D1','#72243E']:score<90?['Hit show','#D4537E','#fff']:['A classic','#FFD23F','#2B2420'];
   let pts='';const N=16;for(let i=0;i<2*N;i++){const r=i%2?78:100,a=Math.PI*i/N;pts+=(120+r*Math.cos(a)).toFixed(1)+','+(100+r*Math.sin(a)*.85).toFixed(1)+' ';}
   $('eBurst').innerHTML=`<svg viewBox="0 0 240 200"><polygon points="${pts}" fill="${grade[1]}" stroke="#2B2420" stroke-width="4"/></svg><span style="color:${grade[2]}">${score}<small>${grade[0]}</small></span>`;
   $('eVerdict').innerHTML=`You earned <b>${fmt(G.score)}k</b>, ${fmt(G.bon)}k of it in bonuses. ${G.ousted!==null?`In year ${y} your real approval fell below one half, and the board let you go.`:`You kept your majority to the end.`} A director who never shows a pink screen scores 0; the best possible run in ${CUR.name} scores 100.`;
